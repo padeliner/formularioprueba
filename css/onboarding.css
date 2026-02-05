@@ -1,0 +1,1272 @@
+/* =============================================
+   ONBOARDING CSS - iOS Optimized Styles
+   ============================================= */
+
+/* Force Libre Franklin font on all onboarding elements */
+.onboarding-wizard-container,
+.onboarding-wizard-container *,
+.onboarding-step,
+.onboarding-step *,
+.onb-role-card,
+.onb-role-card * {
+    font-family: 'Libre Franklin', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Validation Feedback Styles */
+.error-message {
+    display: none;
+    color: var(--color-error);
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-top: 5px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.input-container.error {
+    border-color: var(--color-error) !important;
+    box-shadow: 0 0 0 1px rgba(255, 68, 68, 0.5);
+}
+
+.checkbox-wrapper.error label {
+    color: var(--color-error) !important;
+}
+
+.checkbox-wrapper.error input[type="checkbox"] {
+    border-color: var(--color-error) !important;
+    box-shadow: 0 0 0 2px rgba(255, 68, 68, 0.2);
+}
+
+/* Loading Spinner */
+.spinner-sm {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Role Selection Cards */
+.onb-role-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    padding: 24px 20px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+    text-align: left;
+    width: 100%;
+    min-height: 140px;
+}
+
+.onb-role-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, rgba(0, 200, 84, 0.05) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.onb-role-card:hover::after,
+.onb-role-card:active::after {
+    opacity: 1;
+}
+
+.onb-role-card:hover,
+.onb-role-card:active {
+    border-color: rgba(0, 200, 84, 0.3);
+    transform: translateY(-2px);
+}
+
+.onb-role-card.active {
+    border-color: var(--color-accent);
+    background: rgba(0, 200, 84, 0.08);
+    box-shadow: 0 0 30px rgba(0, 200, 84, 0.15);
+}
+
+.role-icon-box {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    border-radius: 14px;
+    background: rgba(0, 200, 84, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    flex-shrink: 0;
+    border: 1px solid rgba(0, 200, 84, 0.15);
+    position: relative;
+    z-index: 1;
+}
+
+.role-icon-box svg,
+.role-icon-box i {
+    width: 24px;
+    height: 24px;
+    color: var(--color-accent);
+    stroke: var(--color-accent);
+}
+
+.onb-role-card:hover .role-icon-box,
+.onb-role-card:active .role-icon-box {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    transform: rotate(5deg) scale(1.08);
+    box-shadow: 0 0 20px rgba(0, 200, 84, 0.4);
+}
+
+.onb-role-card:hover .role-icon-box svg,
+.onb-role-card:hover .role-icon-box i,
+.onb-role-card:active .role-icon-box svg,
+.onb-role-card:active .role-icon-box i {
+    color: #000;
+    stroke: #000;
+}
+
+.role-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.role-title {
+    font-size: 1.1rem;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 4px;
+    transition: color 0.3s ease;
+}
+
+.role-desc {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+    margin-top: 8px;
+}
+
+.onb-role-card:hover .role-title {
+    color: #fff;
+}
+
+.onb-role-card:hover .role-desc {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Onboarding Header */
+.onb-header {
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.onb-title {
+    font-size: clamp(2.5rem, 10vw, 4.5rem);
+    font-weight: 950;
+    text-transform: uppercase;
+    letter-spacing: -0.04em;
+    line-height: 0.88;
+    color: #fff;
+    margin-bottom: 16px;
+}
+
+.onb-title .text-accent {
+    color: var(--color-accent);
+    font-style: italic;
+}
+
+.onb-subtitle {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: rgba(255, 255, 255, 0.35);
+    max-width: 320px;
+    margin: 0 auto;
+}
+
+/* ===== ONBOARDING WIZARD - iOS OPTIMIZED ===== */
+
+.onboarding-wizard-container {
+    height: 100dvh;
+    overflow-y: auto;
+    background: linear-gradient(180deg, #000 0%, #0a0a0a 100%);
+    /* Greatly increased top padding (triple the initial logic) to ensure premium spacing below the header */
+    padding: calc(140px + var(--safe-area-top)) 20px calc(120px + var(--safe-area-bottom));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    z-index: 100;
+}
+
+.onboarding-wizard-container::before {
+    content: '';
+    position: absolute;
+    top: -200px;
+    right: -100px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(0, 200, 84, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.onboarding-step {
+    width: 100%;
+    max-width: 600px;
+    animation: fadeInUp 0.4s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Onboarding Typography */
+.onboarding-step h1,
+.onboarding-step h2 {
+    font-size: clamp(2rem, 8vw, 3.5rem);
+    font-weight: 950;
+    letter-spacing: -0.04em;
+    line-height: 0.9;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+
+.onboarding-step h3 {
+    font-size: 1.125rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+}
+
+.onboarding-step label {
+    font-size: 0.875rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Onboarding Inputs */
+.onboarding-step input[type="text"],
+.onboarding-step input[type="email"],
+.onboarding-step textarea {
+    width: 100%;
+    height: 56px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1.5px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 0 20px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: white;
+    /* text-transform: uppercase; REMOVED */
+    letter-spacing: 0.02em;
+    transition: all 0.3s ease;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.onboarding-step input:focus,
+.onboarding-step textarea:focus {
+    outline: none;
+    border-color: rgba(0, 200, 84, 0.4);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 0 4px rgba(0, 200, 84, 0.1);
+}
+
+.onboarding-step input::placeholder,
+.onboarding-step textarea::placeholder {
+    color: rgba(255, 255, 255, 0.25);
+    /* text-transform: uppercase; REMOVED */
+}
+
+.onboarding-step textarea {
+    height: auto;
+    min-height: 120px;
+    padding: 16px 20px;
+    resize: none;
+    line-height: 1.5;
+}
+
+/* Onboarding Selects */
+.onboarding-step select {
+    width: 100%;
+    height: 56px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1.5px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 0 48px 0 20px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.4)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 20px;
+}
+
+.onboarding-step select:focus {
+    outline: none;
+    border-color: rgba(0, 200, 84, 0.4);
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.onboarding-step select:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.onboarding-step select option {
+    background: #1a1a1a;
+    color: white;
+    padding: 12px;
+}
+
+/* Toggle Buttons (Yes/No) */
+.onboarding-step .toggle-btn {
+    padding: 16px 32px;
+    border-radius: 16px;
+    font-size: 1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.onboarding-step .toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.onboarding-step .toggle-btn.active-yes {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #000;
+    box-shadow: 0 4px 20px rgba(0, 200, 84, 0.3);
+}
+
+.onboarding-step .toggle-btn.active-no {
+    background: white;
+    border-color: white;
+    color: #000;
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+}
+
+/* Multi-Select Pills */
+.onboarding-step .pill-btn {
+    padding: 16px 24px;
+    border-radius: 16px;
+    font-size: 1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.onboarding-step .pill-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.onboarding-step .pill-btn.active {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #000;
+    box-shadow: 0 2px 12px rgba(0, 200, 84, 0.3);
+}
+
+.onboarding-step .pill-btn.active-white {
+    background: white;
+    border-color: white;
+    color: #000;
+    box-shadow: 0 2px 12px rgba(255, 255, 255, 0.3);
+}
+
+/* Availability Grid */
+.availability-grid {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 16px;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.availability-grid .day-header,
+.availability-grid .slot-header {
+    font-size: 0.7rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.availability-grid .avail-cell {
+    height: 40px;
+    border-radius: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.availability-grid .avail-cell:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.availability-grid .avail-cell.active {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 12px rgba(0, 200, 84, 0.4);
+}
+
+/* Progress Bar */
+.onboarding-progress {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 32px;
+}
+
+.onboarding-progress .bar {
+    width: 40px;
+    height: 6px;
+    border-radius: 100px;
+    background: rgba(255, 255, 255, 0.1);
+    transition: background 0.4s ease;
+}
+
+.onboarding-progress .bar.active {
+    background: var(--color-accent);
+    box-shadow: 0 0 8px rgba(0, 200, 84, 0.4);
+}
+
+/* Navigation Buttons */
+.onboarding-nav {
+    display: flex;
+    gap: 16px;
+    margin-top: 48px;
+    width: 100%;
+    max-width: 600px;
+}
+
+.onboarding-nav .nav-back {
+    width: 64px;
+    height: 64px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.onboarding-nav .nav-back:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.onboarding-nav .nav-next {
+    flex: 1;
+    height: 64px;
+    border-radius: 20px;
+    background: var(--color-accent);
+    color: #000;
+    font-size: 1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.onboarding-nav .nav-next:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 200, 84, 0.3);
+}
+
+.onboarding-nav .nav-next:active {
+    transform: scale(0.98);
+}
+
+/* Section Dividers */
+.onboarding-step .section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    margin: 40px 0;
+}
+
+/* Accent Text */
+.text-accent {
+    color: var(--color-accent) !important;
+}
+
+/* Space utilities for onboarding */
+.space-y-3>*+* {
+    margin-top: 0.75rem;
+}
+
+.space-y-4>*+* {
+    margin-top: 1rem;
+}
+
+.space-y-6>*+* {
+    margin-top: 1.5rem;
+}
+
+.space-y-8>*+* {
+    margin-top: 2rem;
+}
+
+.space-y-10>*+* {
+    margin-top: 2.5rem;
+}
+
+.space-y-12>*+* {
+    margin-top: 3rem;
+}
+
+.gap-2 {
+    gap: 0.5rem;
+}
+
+.gap-3 {
+    gap: 0.75rem;
+}
+
+.gap-4 {
+    gap: 1rem;
+}
+
+.gap-6 {
+    gap: 1.5rem;
+}
+
+.pt-4 {
+    padding-top: 1rem;
+}
+
+.pt-6 {
+    padding-top: 1.5rem;
+}
+
+.pt-8 {
+    padding-top: 2rem;
+}
+
+.pt-10 {
+    padding-top: 2.5rem;
+}
+
+.py-5 {
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+}
+
+.py-8 {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.py-10 {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+}
+
+.py-16 {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+
+.mb-4 {
+    margin-bottom: 1rem;
+}
+
+.mb-6 {
+    margin-bottom: 1.5rem;
+}
+
+.mb-8 {
+    margin-bottom: 2rem;
+}
+
+.mb-12 {
+    margin-bottom: 3rem;
+}
+
+.mt-8 {
+    margin-top: 2rem;
+}
+
+.mt-12 {
+    margin-top: 3rem;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.items-end {
+    align-items: flex-end;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.justify-start {
+    justify-start: flex-start;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.max-w-sm {
+    max-width: 24rem;
+}
+
+.max-w-md {
+    max-width: 28rem;
+}
+
+.max-w-lg {
+    max-width: 32rem;
+}
+
+.max-w-xl {
+    max-width: 36rem;
+}
+
+.max-w-2xl {
+    max-width: 42rem;
+}
+
+.max-w-4xl {
+    max-width: 56rem;
+}
+
+.mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.border-t {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.rounded-xl {
+    border-radius: 12px;
+}
+
+.rounded-2xl {
+    border-radius: 16px;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.font-medium {
+    font-weight: 500;
+}
+
+.font-bold {
+    font-weight: 700;
+}
+
+.font-black {
+    font-weight: 900;
+}
+
+.tracking-tight {
+    letter-spacing: -0.02em;
+}
+
+.tracking-tighter {
+    letter-spacing: -0.04em;
+}
+
+.tracking-wide {
+    letter-spacing: 0.02em;
+}
+
+.tracking-widest {
+    letter-spacing: 0.1em;
+}
+
+.text-sm {
+    font-size: 0.875rem;
+}
+
+.text-base {
+    font-size: 1rem;
+}
+
+.text-lg {
+    font-size: 1.125rem;
+}
+
+.text-xl {
+    font-size: 1.25rem;
+}
+
+.text-2xl {
+    font-size: 1.5rem;
+}
+
+.text-4xl {
+    font-size: 2.25rem;
+}
+
+.text-5xl {
+    font-size: 3rem;
+}
+
+.leading-none {
+    line-height: 1;
+}
+
+.leading-tight {
+    line-height: 1.1;
+}
+
+.leading-relaxed {
+    line-height: 1.6;
+}
+
+.text-white {
+    color: #fff;
+}
+
+.text-white\/30 {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.text-white\/40 {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.text-white\/50 {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Restored Input Styles (extracted from inline JS) */
+.google-input-restored {
+    width: 100%;
+    height: 50px;
+    background: transparent;
+    border: none;
+    color: white;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    font-weight: bold;
+    padding-left: 3.5rem !important;
+    /* increased to match original 55px spacing */
+}
+
+.google-input-restored.no-icon {
+    padding-left: 1rem;
+}
+
+.toggle-btn.active-yes {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #000;
+    box-shadow: 0 4px 20px rgba(0, 200, 84, 0.3);
+}
+
+.toggle-btn.active-no {
+    background: white;
+    border-color: white;
+    color: #000;
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+}
+
+.text-white\/70 {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.bg-white\/5 {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.bg-white\/10 {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.bg-white\/20 {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* --- JS Step Specific Classes --- */
+.google-step-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 100px);
+    padding: 20px 20px 80px 20px;
+}
+
+.google-content-width {
+    width: 100%;
+    max-width: 400px;
+}
+
+.role-step-width {
+    width: 100%;
+    max-width: 800px;
+}
+
+.google-label {
+    margin-bottom: 12px;
+    color: #fff;
+    display: block;
+}
+
+.onboarding-step input.google-input-padding {
+    padding-left: 55px !important;
+}
+
+.google-error-msg {
+    display: none;
+    color: var(--color-error);
+    font-size: 12px;
+    margin-top: 6px;
+    font-weight: bold;
+}
+
+.google-helper-text {
+    font-size: 14px;
+    color: #fff;
+    margin-top: 12px;
+    font-weight: 600;
+}
+
+.grid-2-cols {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+@media (min-width: 768px) {
+    .grid-2-cols {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* --- Location Step Classes --- */
+.location-section-title {
+    font-size: 1.25rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-style: italic;
+    color: #fff;
+    display: block;
+}
+
+.location-label {
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.4);
+    margin-left: 0.5rem;
+}
+
+.location-select {
+    width: 100%;
+    height: 3.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    color: #fff;
+    font-weight: 700;
+    text-transform: uppercase;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.location-select:focus {
+    border-color: rgba(0, 200, 84, 0.5);
+}
+
+.location-select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.lang-btn {
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.lang-btn.active {
+    background: var(--color-accent);
+    color: #000;
+    border-color: var(--color-accent);
+}
+
+.lang-btn.inactive {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.lang-btn.inactive:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.location-input-other {
+    width: 100%;
+    height: 3.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.75rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.location-input-other:focus {
+    border-color: rgba(0, 200, 84, 0.5);
+}
+
+.location-input-other::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.location-helper {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Availability Step Legacy Matrix Styles */
+.avail-grid-container {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    border-radius: 2rem;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.avail-matrix {
+    display: grid;
+    grid-template-columns: 5rem repeat(7, 1fr);
+    gap: 0.25rem;
+}
+
+/* Day Column Header (Toggle All Column) */
+.avail-day-header {
+    height: 3.5rem;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 900;
+    color: white;
+    background: transparent;
+    border: 1px solid transparent;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+.avail-day-header:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Slot Row Header (Toggle All Row) */
+.avail-slot-header {
+    font-size: 0.75rem;
+    font-weight: 900;
+    color: white;
+    text-transform: uppercase;
+    text-align: left;
+    align-self: center;
+    transition: color 0.2s;
+    cursor: pointer;
+    padding-left: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background: transparent;
+    border: none;
+}
+
+.avail-slot-header:hover {
+    color: #00C854;
+    /* Branding Green */
+}
+
+/* The Grid Cell */
+.avail-cell {
+    width: 100%;
+    height: 3.5rem;
+    /* md:h-14 approx */
+    border-radius: 0.5rem;
+    border: 2px solid transparent;
+    /* Prepare for active border */
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+.avail-cell:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Active State (Branding Green) */
+.avail-cell.active {
+    background: #00C854 !important;
+    /* Branding Green */
+    border-color: #00C854 !important;
+    box-shadow: 0 0 15px rgba(0, 200, 84, 0.4) !important;
+    /* Green Glow */
+}
+
+/* Corner Label */
+.avail-corner-label {
+    font-size: 0.6rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: white;
+    opacity: 0.6;
+    align-self: end;
+    text-align: center;
+    line-height: 1;
+    padding-bottom: 0.75rem;
+}
+
+/* Fix for Stats Input Container Overlap */
+.input-container {
+    position: relative;
+    width: 100%;
+    height: 3.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 0 !important;
+    /* Grid handles spacing */
+}
+
+.input-container .input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.25rem;
+    height: 1.25rem;
+    color: rgba(255, 255, 255, 0.5);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Ensure helper text inside doesn't break layout */
+.input-container .mobile-select-trigger {
+    height: 100%;
+    width: 100%;
+    padding-left: 3rem;
+    /* Space for icon */
+    padding-right: 1rem;
+}
+
+
+@media (min-width: 768px) {
+    .avail-corner-label {
+        font-size: 0.75rem;
+    }
+
+    .avail-slot-header {
+        font-size: 0.875rem;
+    }
+
+    .avail-day-header {
+        font-size: 1.125rem;
+        height: 3.5rem;
+    }
+
+    .avail-grid-container {
+        padding: 1.5rem;
+    }
+}
+
+/* =============================================
+   MOBILE OPTIMIZATIONS - Verification Badge
+   ============================================= */
+
+@media (max-width: 640px) {
+
+    /* Verification Badge Container - Reduce padding and gap */
+    .verification-badge-container {
+        padding: 1rem !important;
+        gap: 0.75rem !important;
+    }
+
+    /* Verification Badge Icon - Smaller on mobile */
+    .verification-badge-icon {
+        width: 2.5rem !important;
+        height: 2.5rem !important;
+    }
+
+    /* Icon SVG inside - Smaller on mobile */
+    .verification-badge-icon-svg {
+        width: 20px !important;
+        height: 20px !important;
+    }
+
+    /* Badge Title - Smaller font on mobile */
+    .verification-badge-title {
+        font-size: 0.875rem !important;
+        line-height: 1.2 !important;
+    }
+
+    /* Badge Subtitle - Smaller font on mobile */
+    .verification-badge-subtitle {
+        font-size: 0.625rem !important;
+        line-height: 1.4 !important;
+        letter-spacing: 0.05em !important;
+    }
+
+    /* Header - Reduce bottom margin on mobile */
+    .onb-header {
+        margin-bottom: 2rem !important;
+    }
+
+    /* Title - Better mobile scaling */
+    .onb-title {
+        font-size: clamp(2rem, 8vw, 3.5rem) !important;
+        margin-bottom: 12px !important;
+    }
+
+    /* Subtitle - Better mobile scaling */
+    .onb-subtitle {
+        font-size: 0.625rem !important;
+        letter-spacing: 0.15em !important;
+    }
+
+    /* Competition Grid - 1 column on very small screens, 2 on regular mobile (default behavior can be 2 via JS/HTML, here we enforce flow) */
+    .competition-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Pill Buttons - Optimize for mobile */
+    .pill-btn {
+        padding: 12px 16px !important;
+        font-size: 0.875rem !important;
+    }
+
+    /* Toggle Buttons - Optimize for mobile */
+    .toggle-btn {
+        padding: 12px 20px !important;
+        font-size: 0.875rem !important;
+    }
+
+    /* Input/Textarea text size */
+    .onboarding-step input,
+    .onboarding-step textarea {
+        font-size: 0.875rem !important;
+    }
+}
