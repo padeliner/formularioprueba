@@ -68,7 +68,7 @@ export function render(formData) {
                         <p class="field-hint" style="margin-bottom: 12px;">Selecciona todas las que apliquen</p>
                         <div class="chips-grid">
                             ${SURFACE_TYPES.map(surface => `
-                                <button type="button" class="chip surface-chip ${formData.surfaceTypes?.includes(surface) ? 'active' : ''}" data-value="${surface}">
+                                <button type="button" class="exp-chip surface-chip ${formData.surfaceTypes?.includes(surface) ? 'active' : ''}" data-value="${surface}">
                                     ${surface}
                                 </button>
                             `).join('')}
