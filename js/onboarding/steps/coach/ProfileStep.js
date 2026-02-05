@@ -73,7 +73,6 @@ export function render(formData) {
                                     <option value="${o.value}" ${formData.yearsExperience === o.value ? 'selected' : ''}>${o.label}</option>
                                 `).join('')}
                             </select>
-                            <i data-lucide="chevron-down" class="select-icon"></i>
                         </div>
                         
                         <div class="field-error" id="experience-error" style="display:none;">

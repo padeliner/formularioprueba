@@ -70,7 +70,6 @@ export function render(formData) {
                                 <option value="20-40 KM" ${formData.displacementRange === '20-40 KM' ? 'selected' : ''}>20-40 KM</option>
                                 <option value="> 40 KM" ${formData.displacementRange === '> 40 KM' ? 'selected' : ''}>&gt; 40 KM</option>
                             </select>
-                            <i data-lucide="chevron-down" class="select-icon"></i>
                         </div>
                         
                         <div class="field-error" id="displacement-error" style="display:none;">
