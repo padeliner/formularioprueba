@@ -4,24 +4,6 @@ const STUDENTS_RANGES = ['< 20', '20 – 50', '50 – 100', '100 – 200', '200 
 const CLASSES_RANGES = ['< 10', '10 – 25', '25 – 50', '50 – 100', '100 +'];
 
 export function render(formData) {
-    const classPriceChips = CLASS_PRICE_RANGES.map(price => `
-        <button type="button" class="exp-chip class-price-chip ${formData.classPriceRange === price ? 'active' : ''}" data-value="${price}">
-            ${price}
-        </button>
-    `).join('');
-
-    const studentsChips = STUDENTS_RANGES.map(range => `
-        <button type="button" class="exp-chip students-chip ${formData.estimatedStudents === range ? 'active' : ''}" data-value="${range}">
-            ${range}
-        </button>
-    `).join('');
-
-    const classesChips = CLASSES_RANGES.map(range => `
-        <button type="button" class="exp-chip classes-chip ${formData.estimatedClasses === range ? 'active' : ''}" data-value="${range}">
-            ${range}
-        </button>
-    `).join('');
-
     return `
         <div class="onboarding-step step-content">
             <div class="step-inner">
@@ -56,8 +38,13 @@ export function render(formData) {
                                         </div>
                                         <div class="section-label">Precio medio por clase</div>
                                     </div>
-                                    <div class="chips-grid">
-                                        ${classPriceChips}
+                                    <div class="select-wrapper">
+                                        <select id="class-price-select" class="field-select">
+                                            <option value="">Selecciona un rango de precios</option>
+                                            ${CLASS_PRICE_RANGES.map(price => `
+                                                <option value="${price}" ${formData.classPriceRange === price ? 'selected' : ''}>${price}</option>
+                                            `).join('')}
+                                        </select>
                                     </div>
                                     <div class="field-error" id="class-price-error" style="display:none;">
                                         <i data-lucide="alert-circle"></i>
@@ -72,8 +59,13 @@ export function render(formData) {
                                         </div>
                                         <div class="section-label">Alumnos estimados / semana</div>
                                     </div>
-                                    <div class="chips-grid">
-                                        ${studentsChips}
+                                    <div class="select-wrapper">
+                                        <select id="students-select" class="field-select">
+                                            <option value="">Selecciona un rango</option>
+                                            ${STUDENTS_RANGES.map(range => `
+                                                <option value="${range}" ${formData.estimatedStudents === range ? 'selected' : ''}>${range}</option>
+                                            `).join('')}
+                                        </select>
                                     </div>
                                     <div class="field-error" id="students-error" style="display:none;">
                                         <i data-lucide="alert-circle"></i>
@@ -88,8 +80,13 @@ export function render(formData) {
                                         </div>
                                         <div class="section-label">Clases estimadas / semana</div>
                                     </div>
-                                    <div class="chips-grid">
-                                        ${classesChips}
+                                    <div class="select-wrapper">
+                                        <select id="classes-count-select" class="field-select">
+                                            <option value="">Selecciona un rango</option>
+                                            ${CLASSES_RANGES.map(range => `
+                                                <option value="${range}" ${formData.estimatedClasses === range ? 'selected' : ''}>${range}</option>
+                                            `).join('')}
+                                        </select>
                                     </div>
                                     <div class="field-error" id="classes-count-error" style="display:none;">
                                         <i data-lucide="alert-circle"></i>
@@ -114,7 +111,7 @@ export function render(formData) {
 
 export function attach(formData, setFormData, rerender, nextStep) {
     if (window.lucide) window.lucide.createIcons();
-    
+
     const classesDetails = document.getElementById('classes-details');
     const nextBtn = document.getElementById('onb-next-btn');
 
@@ -155,38 +152,35 @@ export function attach(formData, setFormData, rerender, nextStep) {
         clearAllErrors();
     });
 
-    // Class price chips
-    document.querySelectorAll('.class-price-chip').forEach(chip => {
-        chip.onclick = () => {
-            formData.classPriceRange = chip.dataset.value;
+    // Class price select
+    const classPriceSelect = document.getElementById('class-price-select');
+    if (classPriceSelect) {
+        classPriceSelect.addEventListener('change', (e) => {
+            formData.classPriceRange = e.target.value;
             setFormData(formData);
-            document.querySelectorAll('.class-price-chip').forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
             showError('class-price-error', false);
-        };
-    });
+        });
+    }
 
-    // Students chips
-    document.querySelectorAll('.students-chip').forEach(chip => {
-        chip.onclick = () => {
-            formData.estimatedStudents = chip.dataset.value;
+    // Students select
+    const studentsSelect = document.getElementById('students-select');
+    if (studentsSelect) {
+        studentsSelect.addEventListener('change', (e) => {
+            formData.estimatedStudents = e.target.value;
             setFormData(formData);
-            document.querySelectorAll('.students-chip').forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
             showError('students-error', false);
-        };
-    });
+        });
+    }
 
-    // Classes count chips
-    document.querySelectorAll('.classes-chip').forEach(chip => {
-        chip.onclick = () => {
-            formData.estimatedClasses = chip.dataset.value;
+    // Classes count select
+    const classesCountSelect = document.getElementById('classes-count-select');
+    if (classesCountSelect) {
+        classesCountSelect.addEventListener('change', (e) => {
+            formData.estimatedClasses = e.target.value;
             setFormData(formData);
-            document.querySelectorAll('.classes-chip').forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
             showError('classes-count-error', false);
-        };
-    });
+        });
+    }
 
     if (nextBtn) {
         nextBtn.onclick = () => {

@@ -4,22 +4,10 @@ const INSTALLATION_TYPES = ['Indoor', 'Outdoor'];
 const SURFACE_TYPES = ['Césped artificial', 'Hormigón', 'Resina', 'Moqueta', 'Otro'];
 
 export function render(formData) {
-    const courtCountChips = COURT_COUNTS.map(count => `
-        <button type="button" class="exp-chip court-count-chip ${formData.courtCount === count ? 'active' : ''}" data-value="${count}">
-            ${count}
-        </button>
-    `).join('');
-
     const installationChips = INSTALLATION_TYPES.map(type => `
         <button type="button" class="exp-chip installation-chip ${formData.installationTypes?.includes(type) ? 'active' : ''}" data-value="${type}" style="display: inline-flex; align-items: center; gap: 6px;">
             <i data-lucide="${type === 'Indoor' ? 'warehouse' : 'sun'}"></i>
             <span>${type}</span>
-        </button>
-    `).join('');
-
-    const surfaceChips = SURFACE_TYPES.map(surface => `
-        <button type="button" class="exp-chip surface-chip ${formData.surfaceType === surface ? 'active' : ''}" data-value="${surface}">
-            ${surface}
         </button>
     `).join('');
 
@@ -39,8 +27,13 @@ export function render(formData) {
                             </div>
                             <div class="section-label">Número de pistas</div>
                         </div>
-                        <div class="chips-grid">
-                            ${courtCountChips}
+                        <div class="select-wrapper">
+                            <select id="court-count-select" class="field-select">
+                                <option value="">Selecciona el número de pistas</option>
+                                ${COURT_COUNTS.map(count => `
+                                    <option value="${count}" ${formData.courtCount === count ? 'selected' : ''}>${count}</option>
+                                `).join('')}
+                            </select>
                         </div>
                         <div class="field-error" id="court-count-error" style="display:none;">
                             <i data-lucide="alert-circle"></i>
@@ -72,8 +65,13 @@ export function render(formData) {
                             </div>
                             <div class="section-label">Superficie de pistas</div>
                         </div>
-                        <div class="chips-grid">
-                            ${surfaceChips}
+                        <div class="select-wrapper">
+                            <select id="surface-type-select" class="field-select">
+                                <option value="">Selecciona el tipo de superficie</option>
+                                ${SURFACE_TYPES.map(surface => `
+                                    <option value="${surface}" ${formData.surfaceType === surface ? 'selected' : ''}>${surface}</option>
+                                `).join('')}
+                            </select>
                         </div>
                         <div class="field-error" id="surface-error" style="display:none;">
                             <i data-lucide="alert-circle"></i>
@@ -112,9 +110,9 @@ export function render(formData) {
 
 export function attach(formData, setFormData, rerender, nextStep) {
     if (window.lucide) window.lucide.createIcons();
-    
+
     if (!formData.installationTypes) formData.installationTypes = [];
-    
+
     const nextBtn = document.getElementById('onb-next-btn');
 
     const showError = (id, show) => {
@@ -132,16 +130,15 @@ export function attach(formData, setFormData, rerender, nextStep) {
         showError('lighting-error', false);
     };
 
-    // Court count chips
-    document.querySelectorAll('.court-count-chip').forEach(chip => {
-        chip.onclick = () => {
-            formData.courtCount = chip.dataset.value;
+    // Court count select
+    const courtCountSelect = document.getElementById('court-count-select');
+    if (courtCountSelect) {
+        courtCountSelect.addEventListener('change', (e) => {
+            formData.courtCount = e.target.value;
             setFormData(formData);
-            document.querySelectorAll('.court-count-chip').forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
             showError('court-count-error', false);
-        };
-    });
+        });
+    }
 
     // Installation type chips (multi-select)
     document.querySelectorAll('.installation-chip').forEach(chip => {
@@ -161,16 +158,15 @@ export function attach(formData, setFormData, rerender, nextStep) {
         };
     });
 
-    // Surface chips
-    document.querySelectorAll('.surface-chip').forEach(chip => {
-        chip.onclick = () => {
-            formData.surfaceType = chip.dataset.value;
+    // Surface select
+    const surfaceSelect = document.getElementById('surface-type-select');
+    if (surfaceSelect) {
+        surfaceSelect.addEventListener('change', (e) => {
+            formData.surfaceType = e.target.value;
             setFormData(formData);
-            document.querySelectorAll('.surface-chip').forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
             showError('surface-error', false);
-        };
-    });
+        });
+    }
 
     // Lighting toggle
     document.getElementById('lighting-yes')?.addEventListener('click', () => {

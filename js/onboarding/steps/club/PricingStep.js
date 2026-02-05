@@ -3,12 +3,6 @@ const PRICE_RANGES = ['< 15 €', '15 € – 20 €', '20 € – 30 €', '30 
 const PACK_TYPES = ['Bonos de Horas', 'Packs Mensuales', 'Promos Puntuales'];
 
 export function render(formData) {
-    const priceChips = PRICE_RANGES.map(price => `
-        <button type="button" class="chip price-chip ${formData.priceRange === price ? 'active' : ''}" data-value="${price}">
-            ${price}
-        </button>
-    `).join('');
-
     const packChips = PACK_TYPES.map(pack => `
         <button type="button" class="chip pack-chip ${formData.packTypes?.includes(pack) ? 'active' : ''}" data-value="${pack}">
             ${pack}
@@ -31,8 +25,13 @@ export function render(formData) {
                             </div>
                             <div class="section-label">Precio medio por pista / hora</div>
                         </div>
-                        <div class="chips-grid">
-                            ${priceChips}
+                        <div class="select-wrapper">
+                            <select id="price-range-select" class="field-select">
+                                <option value="">Selecciona un rango de precios</option>
+                                ${PRICE_RANGES.map(price => `
+                                    <option value="${price}" ${formData.priceRange === price ? 'selected' : ''}>${price}</option>
+                                `).join('')}
+                            </select>
                         </div>
                         <div class="field-error" id="price-error" style="display:none;">
                             <i data-lucide="alert-circle"></i>
@@ -84,9 +83,9 @@ export function render(formData) {
 
 export function attach(formData, setFormData, rerender, nextStep) {
     if (window.lucide) window.lucide.createIcons();
-    
+
     if (!formData.packTypes) formData.packTypes = [];
-    
+
     const packsDetails = document.getElementById('packs-details');
     const nextBtn = document.getElementById('onb-next-btn');
 
@@ -104,16 +103,15 @@ export function attach(formData, setFormData, rerender, nextStep) {
         showError('pack-type-error', false);
     };
 
-    // Price chips
-    document.querySelectorAll('.price-chip').forEach(chip => {
-        chip.onclick = () => {
-            formData.priceRange = chip.dataset.value;
+    // Price select
+    const priceSelect = document.getElementById('price-range-select');
+    if (priceSelect) {
+        priceSelect.addEventListener('change', (e) => {
+            formData.priceRange = e.target.value;
             setFormData(formData);
-            document.querySelectorAll('.price-chip').forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
             showError('price-error', false);
-        };
-    });
+        });
+    }
 
     // Packs toggle
     document.getElementById('packs-yes')?.addEventListener('click', () => {
