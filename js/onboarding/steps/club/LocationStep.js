@@ -22,6 +22,14 @@ function renderLanguageChips(formData) {
 export function render(formData) {
     const hasLocation = formData.city && formData.country;
     const locationDisplay = hasLocation ? `${formData.city}, ${formData.country}` : '';
+    const customLanguages = formData.customClubLanguages || [];
+
+    const customLanguagesHtml = customLanguages.map(lang => `
+        <button type="button" class="pill-btn active custom-lang" data-custom="${lang}">
+            ${lang}
+            <i data-lucide="x" class="remove-custom"></i>
+        </button>
+    `).join('');
 
     return `
         <div class="onboarding-step step-content">
@@ -87,11 +95,30 @@ export function render(formData) {
                         
                         <div class="chips-grid" id="languages-grid">
                             ${renderLanguageChips(formData)}
+                            ${customLanguagesHtml}
+                        </div>
+
+                        <!-- Add custom language -->
+                        <div class="add-language-section">
+                            <p class="add-language-label">¿No encuentras tu idioma?</p>
+                            <div class="add-language-row">
+                                <input
+                                    type="text" 
+                                    id="onb-customLanguage"
+                                    class="add-language-input"
+                                    placeholder="Escribe el idioma..."
+                                    maxlength="30"
+                                >
+                                <button type="button" id="add-language-btn" class="add-language-btn">
+                                    <i data-lucide="plus"></i>
+                                    <span>Añadir</span>
+                                </button>
+                            </div>
                         </div>
                         
-                        <div class="selected-summary" id="selected-summary" style="${formData.clubLanguages && formData.clubLanguages.length > 0 ? '' : 'display:none'}">
-                            <span class="summary-count">${formData.clubLanguages ? formData.clubLanguages.length : 0}</span>
-                            <span class="summary-text">idioma${formData.clubLanguages && formData.clubLanguages.length !== 1 ? 's' : ''} seleccionado${formData.clubLanguages && formData.clubLanguages.length !== 1 ? 's' : ''}</span>
+                        <div class="selected-summary" id="selected-summary" style="${(formData.clubLanguages?.length > 0 || customLanguages.length > 0) ? '' : 'display:none'}">
+                            <span class="summary-count">${(formData.clubLanguages?.length || 0) + customLanguages.length}</span>
+                            <span class="summary-text">idioma${((formData.clubLanguages?.length || 0) + customLanguages.length) !== 1 ? 's' : ''} seleccionado${((formData.clubLanguages?.length || 0) + customLanguages.length) !== 1 ? 's' : ''}</span>
                         </div>
                         
                         <div class="field-error" id="languages-error" style="display:none;">
@@ -119,12 +146,32 @@ export function attach(formData, setFormData, rerender, nextStep) {
     const locationInput = document.getElementById('onb-location-input');
     const clearLocationBtn = document.getElementById('clear-location');
     const nextBtn = document.getElementById('onb-next-btn');
+    const customLangInput = document.getElementById('onb-customLanguage');
+    const addLangBtn = document.getElementById('add-language-btn');
 
     const showError = (id, show) => {
         const el = document.getElementById(id);
         if (el) {
             el.style.display = show ? 'flex' : 'none';
             if (show && window.lucide) window.lucide.createIcons();
+        }
+    };
+
+    // Initialize customClubLanguages if needed
+    if (!formData.customClubLanguages) formData.customClubLanguages = [];
+
+    const updateSummary = () => {
+        const total = (formData.clubLanguages?.length || 0) + formData.customClubLanguages.length;
+        const summary = document.getElementById('selected-summary');
+        if (summary) {
+            if (total > 0) {
+                summary.style.display = '';
+                summary.querySelector('.summary-count').textContent = total;
+                summary.querySelector('.summary-text').textContent =
+                    `idioma${total !== 1 ? 's' : ''} seleccionado${total !== 1 ? 's' : ''}`;
+            } else {
+                summary.style.display = 'none';
+            }
         }
     };
 
@@ -201,18 +248,74 @@ export function attach(formData, setFormData, rerender, nextStep) {
             }
             setFormData(formData);
             showError('languages-error', false);
-
-            // Update summary
-            const summary = document.getElementById('selected-summary');
-            const count = document.querySelector('.summary-count');
-            const text = document.querySelector('.summary-text');
-            if (summary && count && text) {
-                count.textContent = formData.clubLanguages.length;
-                text.textContent = `idioma${formData.clubLanguages.length !== 1 ? 's' : ''} seleccionado${formData.clubLanguages.length !== 1 ? 's' : ''}`;
-                summary.style.display = formData.clubLanguages.length > 0 ? '' : 'none';
-            }
+            updateSummary();
         };
     });
+
+    // Custom language chips (remove)
+    document.querySelectorAll('.custom-lang').forEach(chip => {
+        chip.onclick = (e) => {
+            const lang = chip.dataset.custom;
+            formData.customClubLanguages = formData.customClubLanguages.filter(l => l !== lang);
+            setFormData(formData);
+            chip.remove();
+            updateSummary();
+        };
+    });
+
+    // Add custom language
+    const addCustomLanguage = () => {
+        const value = customLangInput?.value?.trim();
+        if (!value) return;
+
+        // Check if already exists
+        if (formData.clubLanguages.includes(value) || formData.customClubLanguages.includes(value)) {
+            customLangInput.value = '';
+            return;
+        }
+
+        // Add to custom languages
+        formData.customClubLanguages.push(value);
+        setFormData(formData);
+
+        // Create new chip visually
+        const grid = document.getElementById('languages-grid');
+        if (grid) {
+            const newChip = document.createElement('button');
+            newChip.type = 'button';
+            newChip.className = 'pill-btn active custom-lang';
+            newChip.dataset.custom = value;
+            newChip.innerHTML = `${value}<i data-lucide="x" class="remove-custom"></i>`;
+            grid.appendChild(newChip);
+
+            // Add click handler for removal
+            newChip.onclick = () => {
+                formData.customClubLanguages = formData.customClubLanguages.filter(l => l !== value);
+                setFormData(formData);
+                newChip.remove();
+                updateSummary();
+            };
+
+            if (window.lucide) window.lucide.createIcons();
+        }
+
+        customLangInput.value = '';
+        updateSummary();
+        showError('languages-error', false);
+    };
+
+    if (addLangBtn) {
+        addLangBtn.onclick = addCustomLanguage;
+    }
+
+    if (customLangInput) {
+        customLangInput.onkeydown = (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addCustomLanguage();
+            }
+        };
+    }
 
     // Next button with validation
     if (nextBtn) {
@@ -226,7 +329,8 @@ export function attach(formData, setFormData, rerender, nextStep) {
                 isValid = false;
             }
 
-            if (!formData.clubLanguages || formData.clubLanguages.length === 0) {
+            const totalLanguages = (formData.clubLanguages?.length || 0) + formData.customClubLanguages.length;
+            if (totalLanguages === 0) {
                 showError('languages-error', true);
                 isValid = false;
             }
