@@ -65,13 +65,13 @@ export function render(formData) {
                             </div>
                             <div class="section-label">Superficie de pistas</div>
                         </div>
-                        <div class="select-wrapper">
-                            <select id="surface-type-select" class="field-select">
-                                <option value="">Selecciona el tipo de superficie</option>
-                                ${SURFACE_TYPES.map(surface => `
-                                    <option value="${surface}" ${formData.surfaceType === surface ? 'selected' : ''}>${surface}</option>
-                                `).join('')}
-                            </select>
+                        <p class="field-hint" style="margin-bottom: 12px;">Selecciona todas las que apliquen</p>
+                        <div class="chips-grid">
+                            ${SURFACE_TYPES.map(surface => `
+                                <button type="button" class="chip surface-chip ${formData.surfaceTypes?.includes(surface) ? 'active' : ''}" data-value="${surface}">
+                                    ${surface}
+                                </button>
+                            `).join('')}
                         </div>
                         <div class="field-error" id="surface-error" style="display:none;">
                             <i data-lucide="alert-circle"></i>
@@ -158,15 +158,25 @@ export function attach(formData, setFormData, rerender, nextStep) {
         };
     });
 
-    // Surface select
-    const surfaceSelect = document.getElementById('surface-type-select');
-    if (surfaceSelect) {
-        surfaceSelect.addEventListener('change', (e) => {
-            formData.surfaceType = e.target.value;
+    // Surface type chips (multi-select)
+    if (!formData.surfaceTypes) formData.surfaceTypes = [];
+
+    document.querySelectorAll('.surface-chip').forEach(chip => {
+        chip.onclick = () => {
+            const surface = chip.dataset.value;
+            if (formData.surfaceTypes.includes(surface)) {
+                formData.surfaceTypes = formData.surfaceTypes.filter(s => s !== surface);
+                chip.classList.remove('active');
+            } else {
+                formData.surfaceTypes.push(surface);
+                chip.classList.add('active');
+            }
             setFormData(formData);
-            showError('surface-error', false);
-        });
-    }
+            if (formData.surfaceTypes.length > 0) {
+                showError('surface-error', false);
+            }
+        };
+    });
 
     // Lighting toggle
     document.getElementById('lighting-yes')?.addEventListener('click', () => {
@@ -200,7 +210,7 @@ export function attach(formData, setFormData, rerender, nextStep) {
                 isValid = false;
             }
 
-            if (!formData.surfaceType) {
+            if (!formData.surfaceTypes || formData.surfaceTypes.length === 0) {
                 showError('surface-error', true);
                 isValid = false;
             }
@@ -228,7 +238,9 @@ export function validate(formData) {
     if (!formData.installationTypes || formData.installationTypes.length === 0) {
         errors.installationTypes = "Selecciona al menos un tipo";
     }
-    if (!formData.surfaceType) errors.surfaceType = "Selecciona el tipo de superficie";
+    if (!formData.surfaceTypes || formData.surfaceTypes.length === 0) {
+        errors.surfaceTypes = "Selecciona al menos un tipo";
+    }
     if (formData.hasLighting === undefined) errors.hasLighting = "Selecciona una opción";
     return errors;
 }
