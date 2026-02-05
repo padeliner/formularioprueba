@@ -117,25 +117,6 @@ export function render(formData) {
                         </div>
                     </div>
 
-                    <div class="form-section">
-                        <div class="section-icon-row">
-                            <div class="section-icon" style="background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);">
-                                <i data-lucide="instagram" style="color: white;"></i>
-                            </div>
-                            <div class="section-label">Redes sociales</div>
-                        </div>
-                        <div class="input-field">
-                            <input 
-                                type="text" 
-                                id="onb-instagram" 
-                                class="field-input"
-                                placeholder="@tu_club o web"
-                                value="${formData.instagram || ''}"
-                                autocomplete="off"
-                            >
-                            <i data-lucide="at-sign" class="field-icon"></i>
-                        </div>
-                        <p class="field-hint">Opcional - Se mostrará en tu perfil público</p>
                     </div>
                 </div>
 
@@ -152,11 +133,11 @@ export function render(formData) {
 
 export function attach(formData, setFormData, rerender, nextStep) {
     if (window.lucide) window.lucide.createIcons();
-    
+
     if (!formData.playerLevels) formData.playerLevels = [];
     if (!formData.timeSlots) formData.timeSlots = [];
     if (!formData.eventTypes) formData.eventTypes = [];
-    
+
     const eventsDetails = document.getElementById('events-details');
     const nextBtn = document.getElementById('onb-next-btn');
 
@@ -256,11 +237,7 @@ export function attach(formData, setFormData, rerender, nextStep) {
         };
     });
 
-    // Instagram input
-    document.getElementById('onb-instagram')?.addEventListener('input', (e) => {
-        formData.instagram = e.target.value;
-        setFormData(formData);
-    });
+
 
     if (nextBtn) {
         nextBtn.onclick = () => {
