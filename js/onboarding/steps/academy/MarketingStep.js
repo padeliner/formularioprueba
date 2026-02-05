@@ -1,20 +1,6 @@
 // MarketingStep.js - Academy Step 8: Marketing (Visibilidad)
-import { SPONSOR_TYPES } from '../../constants.js';
-
-const SPONSOR_ICONS = {
-    'Pala': 'sword',
-    'Ropa / Calzado': 'shirt',
-    'Otro': 'package'
-};
 
 export function render(formData) {
-    const sponsorChips = SPONSOR_TYPES.map(type => `
-        <button type="button" class="sponsor-chip ${formData.sponsorTypes?.includes(type) ? 'active' : ''}" data-value="${type}">
-            <i data-lucide="${SPONSOR_ICONS[type] || 'tag'}"></i>
-            <span>${type}</span>
-        </button>
-    `).join('');
-
     return `
         <div class="onboarding-step step-content">
             <div class="step-inner">
@@ -44,22 +30,13 @@ export function render(formData) {
 
                         <div id="sponsors-details" class="expandable-content ${formData.hasSponsors ? 'expanded' : ''}">
                             <div style="margin-top: 20px;">
-                                <p class="field-hint" style="margin-bottom: 12px;">Tipo de patrocinio</p>
-                                <div class="sponsor-chips-grid">
-                                    ${sponsorChips}
-                                </div>
-                                <div class="field-error" id="sponsor-type-error" style="display:none;">
-                                    <i data-lucide="alert-circle"></i>
-                                    <span>Selecciona al menos un tipo de patrocinio</span>
-                                </div>
-                                
-                                <div class="input-field" style="margin-top: 16px;">
-                                    <input type="text" id="onb-sponsorBrand" class="field-input" placeholder="Nombre de la marca principal" value="${formData.sponsorBrand || ''}">
+                                <div class="input-field">
+                                    <input type="text" id="onb-sponsorBrand" class="field-input" placeholder="Nombres de los patrocinadores" value="${formData.sponsorBrand || ''}">
                                     <i data-lucide="tag" class="field-icon"></i>
                                 </div>
                                 <div class="field-error" id="sponsor-brand-error" style="display:none;">
                                     <i data-lucide="alert-circle"></i>
-                                    <span>Introduce la marca principal</span>
+                                    <span>Introduce los patrocinadores</span>
                                 </div>
                             </div>
                         </div>
@@ -116,14 +93,12 @@ export function attach(formData, setFormData, rerender, nextStep) {
 
     const clearAllErrors = () => {
         showError('sponsors-toggle-error', false);
-        showError('sponsor-type-error', false);
         showError('sponsor-brand-error', false);
     };
 
     // Sponsors toggle
     document.getElementById('sponsors-yes')?.addEventListener('click', () => {
         formData.hasSponsors = true;
-        if (!formData.sponsorTypes) formData.sponsorTypes = [];
         setFormData(formData);
         document.getElementById('sponsors-yes').classList.add('active-yes');
         document.getElementById('sponsors-no').classList.remove('active-no');
@@ -133,7 +108,6 @@ export function attach(formData, setFormData, rerender, nextStep) {
 
     document.getElementById('sponsors-no')?.addEventListener('click', () => {
         formData.hasSponsors = false;
-        formData.sponsorTypes = [];
         formData.sponsorBrand = '';
         setFormData(formData);
         document.getElementById('sponsors-no').classList.add('active-no');
@@ -141,26 +115,6 @@ export function attach(formData, setFormData, rerender, nextStep) {
         sponsorsDetails?.classList.remove('expanded');
         showError('sponsors-toggle-error', false);
         clearAllErrors();
-    });
-
-    // Sponsor chips
-    document.querySelectorAll('.sponsor-chip').forEach(chip => {
-        chip.onclick = () => {
-            const type = chip.dataset.value;
-            if (!formData.sponsorTypes) formData.sponsorTypes = [];
-
-            if (formData.sponsorTypes.includes(type)) {
-                formData.sponsorTypes = formData.sponsorTypes.filter(t => t !== type);
-                chip.classList.remove('active');
-            } else {
-                formData.sponsorTypes.push(type);
-                chip.classList.add('active');
-            }
-            setFormData(formData);
-            if (formData.sponsorTypes.length > 0) {
-                showError('sponsor-type-error', false);
-            }
-        };
     });
 
     // Inputs
@@ -187,10 +141,6 @@ export function attach(formData, setFormData, rerender, nextStep) {
                 showError('sponsors-toggle-error', true);
                 isValid = false;
             } else if (formData.hasSponsors === true) {
-                if (!formData.sponsorTypes || formData.sponsorTypes.length === 0) {
-                    showError('sponsor-type-error', true);
-                    isValid = false;
-                }
                 if (!formData.sponsorBrand || !formData.sponsorBrand.trim()) {
                     showError('sponsor-brand-error', true);
                     isValid = false;
@@ -212,7 +162,6 @@ export function attach(formData, setFormData, rerender, nextStep) {
 export function validate(formData) {
     const errors = {};
     if (formData.hasSponsors === true) {
-        if (!formData.sponsorTypes || formData.sponsorTypes.length === 0) errors.sponsorTypes = "Selecciona tipos";
         if (!formData.sponsorBrand) errors.sponsorBrand = "Obligatorio";
     }
     return errors;
