@@ -1,4 +1,23 @@
 // ContactStep.js - Club Step 3: Contact Info
+import { LANGUAGES_LIST } from '../../constants.js';
+
+function renderLanguageChips(formData) {
+    if (!formData.clubLanguages) formData.clubLanguages = [];
+
+    return LANGUAGES_LIST.map(lang => {
+        const isActive = formData.clubLanguages.includes(lang);
+        return `
+            <button 
+                type="button" 
+                class="pill-btn ${isActive ? 'active' : ''}" 
+                data-language="${lang}"
+            >
+                ${lang}
+            </button>
+        `;
+    }).join('');
+}
+
 export function render(formData) {
     return `
         <div class="onboarding-step step-content">
@@ -98,7 +117,7 @@ export function render(formData) {
 
 export function attach(formData, setFormData, rerender, nextStep) {
     if (window.lucide) window.lucide.createIcons();
-    
+
     const contactNameInput = document.getElementById('onb-contact-name');
     const emailInput = document.getElementById('onb-email');
     const phoneInput = document.getElementById('onb-phone');
@@ -116,6 +135,7 @@ export function attach(formData, setFormData, rerender, nextStep) {
         showError('name-error', false);
         showError('email-error', false);
         showError('phone-error', false);
+        showError('languages-error', false);
     };
 
     const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -144,6 +164,34 @@ export function attach(formData, setFormData, rerender, nextStep) {
         };
     }
 
+    // Language selection
+    if (!formData.clubLanguages) formData.clubLanguages = [];
+
+    document.querySelectorAll('[data-language]').forEach(btn => {
+        btn.onclick = () => {
+            const lang = btn.getAttribute('data-language');
+            if (formData.clubLanguages.includes(lang)) {
+                formData.clubLanguages = formData.clubLanguages.filter(l => l !== lang);
+                btn.classList.remove('active');
+            } else {
+                formData.clubLanguages.push(lang);
+                btn.classList.add('active');
+            }
+            setFormData(formData);
+            showError('languages-error', false);
+
+            // Update summary
+            const summary = document.getElementById('selected-summary');
+            const count = document.querySelector('.summary-count');
+            const text = document.querySelector('.summary-text');
+            if (summary && count && text) {
+                count.textContent = formData.clubLanguages.length;
+                text.textContent = `idioma${formData.clubLanguages.length !== 1 ? 's' : ''} seleccionado${formData.clubLanguages.length !== 1 ? 's' : ''}`;
+                summary.style.display = formData.clubLanguages.length > 0 ? '' : 'none';
+            }
+        };
+    });
+
     if (nextBtn) {
         nextBtn.onclick = () => {
             clearAllErrors();
@@ -164,6 +212,11 @@ export function attach(formData, setFormData, rerender, nextStep) {
                 isValid = false;
             }
 
+            if (!formData.clubLanguages || formData.clubLanguages.length === 0) {
+                showError('languages-error', true);
+                isValid = false;
+            }
+
             if (isValid) {
                 nextStep();
             } else {
@@ -179,7 +232,7 @@ export function attach(formData, setFormData, rerender, nextStep) {
 export function validate(formData) {
     const errors = {};
     const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    
+
     if (!formData.contactName || !formData.contactName.trim()) {
         errors.contactName = "Introduce el nombre del responsable";
     }

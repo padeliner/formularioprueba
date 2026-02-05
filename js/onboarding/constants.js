@@ -9,8 +9,33 @@ export const ROLES = [
 ];
 
 export const LANGUAGES_LIST = [
-    "Español", "English", "Français", "Italiano", "Deutsch",
-    "Português", "Svenska", "Русский", "中文", "日本語"
+    "Español",           // Spanish
+    "English",           // English
+    "Português",         // Portuguese (PT)
+    "Português (BR)",    // Portuguese (BR)
+    "Français",          // French
+    "Italiano",          // Italian
+    "Deutsch",           // German
+    "Nederlands",        // Dutch
+    "Svenska",           // Swedish
+    "Dansk",             // Danish
+    "Suomi",             // Finnish
+    "Norsk",             // Norwegian
+    "Polski",            // Polish
+    "Русский",           // Russian
+    "العربية",           // Arabic
+    "עברית",             // Hebrew
+    "Türkçe",            // Turkish
+    "Ελληνικά",          // Greek
+    "Bahasa Indonesia",  // Indonesian
+    "ไทย",               // Thai
+    "Filipino",          // Filipino
+    "ދިވެހި",            // Dhivehi
+    "中文",              // Chinese (Simplified)
+    "日本語",            // Japanese
+    "한국어",            // Korean
+    "हिन्दी",            // Hindi
+    "Tiếng Việt"         // Vietnamese
 ];
 
 export const DAYS = ["L", "M", "X", "J", "V", "S", "D"];
@@ -140,5 +165,12 @@ export const DEFAULT_FORM_DATA = {
     // Commercial Step
     commercialName: "",
     commercialPhone: "",
-    commercialEmployment: ""
+    commercialEmployment: "",
+    commercialLanguages: [],
+
+    // Club Languages
+    clubLanguages: [],
+
+    // Academy Languages
+    academyLanguages: []
 };

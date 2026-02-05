@@ -14,18 +14,14 @@ export function render(formData) {
             const isActive = formData.availability.includes(id);
             return `<button type="button" class="avail-cell ${isActive ? 'active' : ''}" data-id="${id}"></button>`;
         }).join('');
-        
+
         gridRows += `
             <button type="button" class="avail-slot-header" data-slot="${slot}">${slot}</button>
             ${cells}
         `;
     });
 
-    const priceChips = PRICES.map(o => `
-        <button type="button" class="price-chip ${formData.pricePerHour === o.value ? 'active' : ''}" data-value="${o.value}">
-            ${o.label}
-        </button>
-    `).join('');
+
 
     return `
         <div class="onboarding-step step-content">
@@ -104,12 +100,19 @@ export function render(formData) {
                             </div>
                             <div class="section-label">Precio por hora</div>
                         </div>
-                        <div class="chips-grid price-chips">
-                            ${priceChips}
-                        </div>
-                        <div class="field-error" id="price-error" style="display:none;">
-                            <i data-lucide="alert-circle"></i>
-                            <span>Selecciona un precio por hora</span>
+                        
+                        <div class="stats-column">
+                            <div class="stat-select-item">
+                                <label class="stat-label">Precio por hora</label>
+                                <select id="onb-pricePerHour" class="stat-select">
+                                    <option value="" disabled ${!formData.pricePerHour ? 'selected' : ''}>Seleccionar</option>
+                                    ${PRICES.map(o => `<option value="${o.value}" ${formData.pricePerHour === o.value ? 'selected' : ''}>${o.label}</option>`).join('')}
+                                </select>
+                                <div class="field-error" id="price-error" style="display:none;">
+                                    <i data-lucide="alert-circle"></i>
+                                    <span>Selecciona un precio por hora</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -196,16 +199,12 @@ export function attach(formData, setFormData, rerender, nextStep) {
         showError('classes-error', false);
     });
 
-    // Price chips
-    document.querySelectorAll('.price-chip').forEach(chip => {
-        chip.onclick = () => {
-            formData.pricePerHour = chip.dataset.value;
-            setFormData(formData);
-            document.querySelectorAll('.price-chip').forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
-            showError('price-error', false);
-            document.getElementById('price-section')?.classList.remove('has-error');
-        };
+    // Price select
+    document.getElementById('onb-pricePerHour')?.addEventListener('change', (e) => {
+        formData.pricePerHour = e.target.value;
+        setFormData(formData);
+        showError('price-error', false);
+        document.getElementById('price-section')?.classList.remove('has-error');
     });
 
     // Error helpers

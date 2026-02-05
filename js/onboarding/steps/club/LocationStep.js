@@ -1,5 +1,23 @@
 // LocationStep.js - Club Step 2: Location (Google Places)
 import { loadGoogleMaps } from '../../../utils/googleMapsLoader.js';
+import { LANGUAGES_LIST } from '../../constants.js';
+
+function renderLanguageChips(formData) {
+    if (!formData.clubLanguages) formData.clubLanguages = [];
+
+    return LANGUAGES_LIST.map(lang => {
+        const isActive = formData.clubLanguages.includes(lang);
+        return `
+            <button 
+                type="button" 
+                class="pill-btn ${isActive ? 'active' : ''}" 
+                data-language="${lang}"
+            >
+                ${lang}
+            </button>
+        `;
+    }).join('');
+}
 
 export function render(formData) {
     const hasLocation = formData.city && formData.country;
@@ -56,6 +74,32 @@ export function render(formData) {
                         </div>
                     </div>
 
+                    <!-- Languages Section -->
+                    <div class="form-section" id="languages-section">
+                        <div class="section-icon-row">
+                            <div class="section-icon">
+                                <i data-lucide="message-circle"></i>
+                            </div>
+                            <div class="section-label">Idiomas del club</div>
+                        </div>
+                        
+                        <p class="field-hint" style="margin-bottom: 12px;">Idiomas que habla el personal del club</p>
+                        
+                        <div class="chips-grid" id="languages-grid">
+                            ${renderLanguageChips(formData)}
+                        </div>
+                        
+                        <div class="selected-summary" id="selected-summary" style="${formData.clubLanguages && formData.clubLanguages.length > 0 ? '' : 'display:none'}">
+                            <span class="summary-count">${formData.clubLanguages ? formData.clubLanguages.length : 0}</span>
+                            <span class="summary-text">idioma${formData.clubLanguages && formData.clubLanguages.length !== 1 ? 's' : ''} seleccionado${formData.clubLanguages && formData.clubLanguages.length !== 1 ? 's' : ''}</span>
+                        </div>
+                        
+                        <div class="field-error" id="languages-error" style="display:none;">
+                            <i data-lucide="alert-circle"></i>
+                            <span>Selecciona al menos un idioma</span>
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="step-footer">
@@ -71,7 +115,7 @@ export function render(formData) {
 
 export function attach(formData, setFormData, rerender, nextStep) {
     if (window.lucide) window.lucide.createIcons();
-    
+
     const locationInput = document.getElementById('onb-location-input');
     const clearLocationBtn = document.getElementById('clear-location');
     const nextBtn = document.getElementById('onb-next-btn');
@@ -114,12 +158,12 @@ export function attach(formData, setFormData, rerender, nextStep) {
                 if (!city && place.name) city = place.name;
                 if (place.formatted_address) address = place.formatted_address;
 
-                Object.assign(formData, { 
-                    country, 
-                    state, 
-                    city, 
+                Object.assign(formData, {
+                    country,
+                    state,
+                    city,
                     address: address,
-                    address_raw: locationInput.value 
+                    address_raw: locationInput.value
                 });
                 setFormData(formData);
                 showError('location-error', false);
@@ -142,14 +186,48 @@ export function attach(formData, setFormData, rerender, nextStep) {
         };
     }
 
+    // Language selection
+    if (!formData.clubLanguages) formData.clubLanguages = [];
+
+    document.querySelectorAll('[data-language]').forEach(btn => {
+        btn.onclick = () => {
+            const lang = btn.getAttribute('data-language');
+            if (formData.clubLanguages.includes(lang)) {
+                formData.clubLanguages = formData.clubLanguages.filter(l => l !== lang);
+                btn.classList.remove('active');
+            } else {
+                formData.clubLanguages.push(lang);
+                btn.classList.add('active');
+            }
+            setFormData(formData);
+            showError('languages-error', false);
+
+            // Update summary
+            const summary = document.getElementById('selected-summary');
+            const count = document.querySelector('.summary-count');
+            const text = document.querySelector('.summary-text');
+            if (summary && count && text) {
+                count.textContent = formData.clubLanguages.length;
+                text.textContent = `idioma${formData.clubLanguages.length !== 1 ? 's' : ''} seleccionado${formData.clubLanguages.length !== 1 ? 's' : ''}`;
+                summary.style.display = formData.clubLanguages.length > 0 ? '' : 'none';
+            }
+        };
+    });
+
     // Next button with validation
     if (nextBtn) {
         nextBtn.onclick = () => {
             showError('location-error', false);
+            showError('languages-error', false);
             let isValid = true;
 
             if (!formData.city || !formData.country) {
                 showError('location-error', true);
+                isValid = false;
+            }
+
+            if (!formData.clubLanguages || formData.clubLanguages.length === 0) {
+                showError('languages-error', true);
                 isValid = false;
             }
 

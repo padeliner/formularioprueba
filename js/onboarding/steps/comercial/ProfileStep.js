@@ -1,5 +1,24 @@
 // ProfileStep.js - Commercial Step 1: Basic Professional Info
 
+import { LANGUAGES_LIST } from '../../constants.js';
+
+function renderLanguageChips(formData) {
+    if (!formData.commercialLanguages) formData.commercialLanguages = [];
+
+    return LANGUAGES_LIST.map(lang => {
+        const isActive = formData.commercialLanguages.includes(lang);
+        return `
+            <button 
+                type="button" 
+                class="pill-btn ${isActive ? 'active' : ''}" 
+                data-language="${lang}"
+            >
+                ${lang}
+            </button>
+        `;
+    }).join('');
+}
+
 export function render(formData) {
     return `
         <div class="onboarding-step step-content">
@@ -107,6 +126,32 @@ export function render(formData) {
                             <span>Selecciona tu situación laboral</span>
                         </div>
                     </div>
+
+                    <!-- Languages Section -->
+                    <div class="form-section" id="languages-section">
+                        <div class="section-icon-row">
+                            <div class="section-icon">
+                                <i data-lucide="message-circle"></i>
+                            </div>
+                            <div class="section-label">Idiomas</div>
+                        </div>
+                        
+                        <p class="field-hint" style="margin-bottom: 12px;">Idiomas que hablas</p>
+                        
+                        <div class="chips-grid" id="languages-grid">
+                            ${renderLanguageChips(formData)}
+                        </div>
+                        
+                        <div class="selected-summary" id="selected-summary" style="${formData.commercialLanguages && formData.commercialLanguages.length > 0 ? '' : 'display:none'}">
+                            <span class="summary-count">${formData.commercialLanguages ? formData.commercialLanguages.length : 0}</span>
+                            <span class="summary-text">idioma${formData.commercialLanguages && formData.commercialLanguages.length !== 1 ? 's' : ''} seleccionado${formData.commercialLanguages && formData.commercialLanguages.length !== 1 ? 's' : ''}</span>
+                        </div>
+                        
+                        <div class="field-error" id="languages-error" style="display:none;">
+                            <i data-lucide="alert-circle"></i>
+                            <span>Selecciona al menos un idioma</span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="step-footer">
@@ -141,6 +186,7 @@ export function attach(formData, setFormData, rerender, nextStep) {
         showError('name-error', false);
         showError('phone-error', false);
         showError('employment-error', false);
+        showError('languages-error', false);
     };
 
     // Name input handler
@@ -183,6 +229,34 @@ export function attach(formData, setFormData, rerender, nextStep) {
         };
     });
 
+    // Language selection
+    if (!formData.commercialLanguages) formData.commercialLanguages = [];
+
+    document.querySelectorAll('[data-language]').forEach(btn => {
+        btn.onclick = () => {
+            const lang = btn.getAttribute('data-language');
+            if (formData.commercialLanguages.includes(lang)) {
+                formData.commercialLanguages = formData.commercialLanguages.filter(l => l !== lang);
+                btn.classList.remove('active');
+            } else {
+                formData.commercialLanguages.push(lang);
+                btn.classList.add('active');
+            }
+            setFormData(formData);
+            showError('languages-error', false);
+
+            // Update summary
+            const summary = document.getElementById('selected-summary');
+            const count = document.querySelector('.summary-count');
+            const text = document.querySelector('.summary-text');
+            if (summary && count && text) {
+                count.textContent = formData.commercialLanguages.length;
+                text.textContent = `idioma${formData.commercialLanguages.length !== 1 ? 's' : ''} seleccionado${formData.commercialLanguages.length !== 1 ? 's' : ''}`;
+                summary.style.display = formData.commercialLanguages.length > 0 ? '' : 'none';
+            }
+        };
+    });
+
     // Next button validation
     if (nextBtn) {
         nextBtn.onclick = () => {
@@ -204,6 +278,12 @@ export function attach(formData, setFormData, rerender, nextStep) {
             // Validate employment status
             if (!formData.commercialEmployment) {
                 showError('employment-error', true);
+                isValid = false;
+            }
+
+            // Validate languages
+            if (!formData.commercialLanguages || formData.commercialLanguages.length === 0) {
+                showError('languages-error', true);
                 isValid = false;
             }
 
