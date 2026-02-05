@@ -1,4 +1,4 @@
-// MarketingStep.js - Academy Step 8: Marketing (Visibilidad)
+// MarketingStep.js - Club Step 8: Marketing (Visibilidad)
 import { SPONSOR_TYPES } from '../../constants.js';
 
 const SPONSOR_ICONS = {
@@ -78,7 +78,7 @@ export function render(formData) {
                                 type="text" 
                                 id="onb-instagram" 
                                 class="field-input"
-                                placeholder="@tu_academia o web"
+                                placeholder="@tu_club o web"
                                 value="${formData.instagram || ''}"
                                 autocomplete="off"
                             >

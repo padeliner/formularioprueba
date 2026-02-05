@@ -22,6 +22,7 @@ import * as ClubFacilitiesStep from './steps/club/FacilitiesStep.js';
 import * as ClubClassesStep from './steps/club/ClassesStep.js';
 import * as ClubBookingsStep from './steps/club/BookingsStep.js';
 import * as ClubCommunityStep from './steps/club/CommunityStep.js';
+import * as ClubMarketingStep from './steps/club/MarketingStep.js';
 import * as ClubVerificationStep from './steps/club/VerificationStep.js';
 
 // Academy steps
@@ -136,8 +137,8 @@ export class OnboardingWizard {
     getMaxStep() {
         // For coach: 6 steps after role selection (0..6)
         if (this.formData.role === 'Entrenador') return 6;
-        // For club: 8 steps after role selection (0..8)
-        if (this.formData.role === 'Club') return 8;
+        // For club: 9 steps after role selection (0..9)
+        if (this.formData.role === 'Club') return 9;
         // For academy: 9 steps after role selection (0..9)
         if (this.formData.role === 'Academia') return 9;
         // For commercial: 1 step after role selection (0..1)
@@ -174,7 +175,8 @@ export class OnboardingWizard {
                 case 5: return ClubClassesStep;
                 case 6: return ClubBookingsStep;
                 case 7: return ClubCommunityStep;
-                case 8: return ClubVerificationStep;
+                case 8: return ClubMarketingStep;
+                case 9: return ClubVerificationStep;
             }
         }
 
@@ -235,7 +237,8 @@ export class OnboardingWizard {
                 5: { name: 'Clases', icon: 'graduation-cap' },
                 6: { name: 'Reservas', icon: 'calendar-check' },
                 7: { name: 'Comunidad', icon: 'users' },
-                8: { name: 'Verificación', icon: 'badge-check' }
+                8: { name: 'Visibilidad', icon: 'eye' },
+                9: { name: 'Verificación', icon: 'badge-check' }
             };
             return clubSteps[this.step] || { name: '', icon: '' };
         }

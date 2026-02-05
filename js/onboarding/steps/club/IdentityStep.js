@@ -35,38 +35,6 @@ export function render(formData) {
                         <p class="field-hint">Este será el nombre visible en Padeliner</p>
                     </div>
 
-                    <!-- Sponsors Section -->
-                    <div class="form-section">
-                        <div class="section-icon-row">
-                            <div class="section-icon">
-                                <i data-lucide="award"></i>
-                            </div>
-                            <div class="section-label">¿Tenéis algún patrocinador?</div>
-                        </div>
-
-                        <div class="toggle-row">
-                            <button type="button" class="toggle-btn ${formData.hasSponsors ? 'active-yes' : ''}" id="sponsor-yes">
-                                SÍ
-                            </button>
-                            <button type="button" class="toggle-btn ${formData.hasSponsors === false ? 'active-no' : ''}" id="sponsor-no">
-                                NO
-                            </button>
-                        </div>
-
-                        <div id="sponsors-details" class="conditional-fields ${formData.hasSponsors ? 'expanded' : ''}" style="margin-top: 16px;">
-                            <label class="field-label">¿Quiénes son?</label>
-                            <div class="input-field">
-                                <input 
-                                    type="text" 
-                                    id="onb-sponsors-list" 
-                                    class="field-input"
-                                    placeholder="Ej: Bullpadel, Head, Coca-Cola..."
-                                    value="${formData.sponsorsList || ''}"
-                                    autocomplete="off"
-                                >
-                                <i data-lucide="award" class="field-icon"></i>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -102,42 +70,6 @@ export function attach(formData, setFormData, rerender, nextStep) {
             if (e.target.value.trim()) {
                 showError('club-name-error', false);
             }
-        };
-    }
-
-    // Sponsors Logic
-    const sponsorsDetails = document.getElementById('sponsors-details');
-    const sponsorsInput = document.getElementById('onb-sponsors-list');
-
-    document.getElementById('sponsor-yes')?.addEventListener('click', () => {
-        formData.hasSponsors = true;
-        setFormData(formData);
-
-        document.getElementById('sponsor-yes').classList.add('active-yes');
-        document.getElementById('sponsor-no').classList.remove('active-no');
-
-        if (sponsorsDetails) {
-            sponsorsDetails.classList.add('expanded');
-            // Auto focus
-            setTimeout(() => sponsorsInput?.focus(), 100);
-        }
-    });
-
-    document.getElementById('sponsor-no')?.addEventListener('click', () => {
-        formData.hasSponsors = false;
-        formData.sponsorsList = ''; // Clear if disabled
-        setFormData(formData);
-
-        document.getElementById('sponsor-no').classList.add('active-no');
-        document.getElementById('sponsor-yes').classList.remove('active-yes');
-
-        if (sponsorsDetails) sponsorsDetails.classList.remove('expanded');
-    });
-
-    if (sponsorsInput) {
-        sponsorsInput.oninput = (e) => {
-            formData.sponsorsList = e.target.value;
-            setFormData(formData);
         };
     }
 
