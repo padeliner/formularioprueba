@@ -208,18 +208,17 @@
 /* ===== ONBOARDING WIZARD - iOS OPTIMIZED ===== */
 
 .onboarding-wizard-container {
-    height: 100dvh;
-    overflow-y: auto;
+    min-height: 100vh;
+    /* Removed height: 100dvh and overflow-y: auto to allow native browser scrolling */
     background: linear-gradient(180deg, #000 0%, #0a0a0a 100%);
     /* Greatly increased top padding (triple the initial logic) to ensure premium spacing below the header */
-    padding: calc(140px + var(--safe-area-top)) 20px calc(250px + var(--safe-area-bottom));
+    padding: calc(140px + var(--safe-area-top)) 20px calc(400px + var(--safe-area-bottom));
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
     position: relative;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
+    /* overflow-x: hidden; Kept on body instead if needed, or here if we want to prevent horizontal scroll */
     z-index: 100;
 }
 
