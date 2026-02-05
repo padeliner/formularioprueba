@@ -23,11 +23,6 @@ export function render(formData) {
         </button>
     `).join('');
 
-    const experienceChips = EXPERIENCE_OPTS.map(o => `
-        <button type="button" class="exp-chip ${formData.yearsExperience === o.value ? 'active' : ''}" data-value="${o.value}">
-            ${o.label}
-        </button>
-    `).join('');
 
     const superpowerCards = SUPERPOWERS.map(p => `
         <button type="button" class="superpower-card ${formData.superpowers.includes(p) ? 'active' : ''}" data-value="${p}">
@@ -70,9 +65,17 @@ export function render(formData) {
                             </div>
                             <div class="section-label">Años de experiencia</div>
                         </div>
-                        <div class="chips-grid">
-                            ${experienceChips}
+                        
+                        <div class="select-wrapper">
+                            <select id="experience-select" class="field-select">
+                                <option value="">Selecciona tus años de experiencia</option>
+                                ${EXPERIENCE_OPTS.map(o => `
+                                    <option value="${o.value}" ${formData.yearsExperience === o.value ? 'selected' : ''}>${o.label}</option>
+                                `).join('')}
+                            </select>
+                            <i data-lucide="chevron-down" class="select-icon"></i>
                         </div>
+                        
                         <div class="field-error" id="experience-error" style="display:none;">
                             <i data-lucide="alert-circle"></i>
                             <span>Selecciona tus años de experiencia</span>
@@ -114,7 +117,7 @@ export function render(formData) {
 
 export function attach(formData, setFormData, rerender, nextStep) {
     if (window.lucide) window.lucide.createIcons();
-    
+
     const nextBtn = document.getElementById('onb-next-btn');
 
     // Error helpers
@@ -143,16 +146,19 @@ export function attach(formData, setFormData, rerender, nextStep) {
         };
     });
 
-    // Experience chips
-    document.querySelectorAll('.exp-chip').forEach(chip => {
-        chip.onclick = () => {
-            formData.yearsExperience = chip.dataset.value;
+    // Experience dropdown
+    const experienceSelect = document.getElementById('experience-select');
+    if (experienceSelect) {
+        experienceSelect.onchange = (e) => {
+            formData.yearsExperience = e.target.value || null;
             setFormData(formData);
-            document.querySelectorAll('.exp-chip').forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
-            showError('experience-error', false);
+            if (e.target.value) {
+                showError('experience-error', false);
+            }
         };
-    });
+        // Initialize icons after render
+        if (window.lucide) window.lucide.createIcons();
+    }
 
     // Superpower cards
     document.querySelectorAll('.superpower-card').forEach(card => {
