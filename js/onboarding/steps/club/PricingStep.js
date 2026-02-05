@@ -1,5 +1,5 @@
 // PricingStep.js - Club Step 5: Pricing & Packs
-const PRICE_RANGES = ['< 15 €', '15 € – 20 €', '20 € – 30 €', '30 € – 40 €', '40 € – 50 €', '50 € +'];
+const PRICE_RANGES = ['< 15 €', '15 € – 20 €', '20 € – 30 €', '30 € – 40 €', '40 € +'];
 const PACK_TYPES = ['Bonos de Horas', 'Packs Mensuales', 'Promos Puntuales'];
 
 export function render(formData) {
