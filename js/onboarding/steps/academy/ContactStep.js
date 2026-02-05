@@ -103,31 +103,7 @@ export function render(formData) {
                         </div>
                     </div>
 
-                    <!-- Languages Section -->
-                    <div class="form-section" id="languages-section">
-                        <div class="section-icon-row">
-                            <div class="section-icon">
-                                <i data-lucide="message-circle"></i>
-                            </div>
-                            <div class="section-label">Idiomas de la academia</div>
-                        </div>
-                        
-                        <p class="field-hint" style="margin-bottom: 12px;">Idiomas que habla el personal de la academia</p>
-                        
-                        <div class="chips-grid" id="languages-grid">
-                            ${renderLanguageChips(formData)}
-                        </div>
-                        
-                        <div class="selected-summary" id="selected-summary" style="${formData.academyLanguages && formData.academyLanguages.length > 0 ? '' : 'display:none'}">
-                            <span class="summary-count">${formData.academyLanguages ? formData.academyLanguages.length : 0}</span>
-                            <span class="summary-text">idioma${formData.academyLanguages && formData.academyLanguages.length !== 1 ? 's' : ''} seleccionado${formData.academyLanguages && formData.academyLanguages.length !== 1 ? 's' : ''}</span>
-                        </div>
-                        
-                        <div class="field-error" id="languages-error" style="display:none;">
-                            <i data-lucide="alert-circle"></i>
-                            <span>Selecciona al menos un idioma</span>
-                        </div>
-                    </div>
+
                 </div>
 
                 <div class="step-footer">
@@ -235,11 +211,6 @@ export function attach(formData, setFormData, rerender, nextStep) {
 
             if (!formData.phone || !formData.phone.trim()) {
                 showError('phone-error', true);
-                isValid = false;
-            }
-
-            if (!formData.academyLanguages || formData.academyLanguages.length === 0) {
-                showError('languages-error', true);
                 isValid = false;
             }
 

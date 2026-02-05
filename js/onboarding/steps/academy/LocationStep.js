@@ -39,11 +39,11 @@ export function render(formData) {
                             </div>
                             <div class="section-label">Ubicación de la academia</div>
                         </div>
-                        
+
                         <div class="location-input-wrapper">
-                            <input 
-                                type="text" 
-                                id="onb-location-input" 
+                            <input
+                                type="text"
+                                id="onb-location-input"
                                 class="location-input ${hasLocation ? 'has-value' : ''}"
                                 placeholder="Buscar ciudad o dirección..."
                                 value="${locationDisplay}"
@@ -54,7 +54,7 @@ export function render(formData) {
                                 aria-label="Buscar ubicación"
                                 enterkeyhint="search"
                             >
-                            ${hasLocation ? `
+                                ${hasLocation ? `
                                 <button type="button" id="clear-location" class="clear-location-btn" aria-label="Borrar ubicación">
                                     <i data-lucide="x"></i>
                                 </button>
@@ -82,18 +82,42 @@ export function render(formData) {
                             </div>
                             <div class="section-label">Idiomas de la academia</div>
                         </div>
-                        
+
                         <p class="field-hint" style="margin-bottom: 12px;">Idiomas que habla el personal de la academia</p>
-                        
+
                         <div class="chips-grid" id="languages-grid">
                             ${renderLanguageChips(formData)}
+                            ${(formData.customAcademyLanguages || []).map(lang => `
+                                <button type="button" class="pill-btn active custom-lang" data-custom="${lang}">
+                                    ${lang}
+                                    <i data-lucide="x" class="remove-custom"></i>
+                                </button>
+                            `).join('')}
                         </div>
-                        
-                        <div class="selected-summary" id="selected-summary" style="${formData.academyLanguages && formData.academyLanguages.length > 0 ? '' : 'display:none'}">
-                            <span class="summary-count">${formData.academyLanguages ? formData.academyLanguages.length : 0}</span>
-                            <span class="summary-text">idioma${formData.academyLanguages && formData.academyLanguages.length !== 1 ? 's' : ''} seleccionado${formData.academyLanguages && formData.academyLanguages.length !== 1 ? 's' : ''}</span>
+
+                        <!-- Add custom language -->
+                        <div class="add-language-section">
+                            <p class="add-language-label">¿No encuentras tu idioma?</p>
+                            <div class="add-language-row">
+                                <input
+                                    type="text"
+                                    id="onb-customLanguage"
+                                    class="add-language-input"
+                                    placeholder="Escribe el idioma..."
+                                    maxlength="30"
+                                >
+                                    <button type="button" id="add-language-btn" class="add-language-btn">
+                                        <i data-lucide="plus"></i>
+                                        <span>Añadir</span>
+                                    </button>
+                            </div>
                         </div>
-                        
+
+                        <div class="selected-summary" id="selected-summary" style="${((formData.academyLanguages?.length || 0) + (formData.customAcademyLanguages?.length || 0)) > 0 ? '' : 'display:none'}">
+                            <span class="summary-count">${(formData.academyLanguages?.length || 0) + (formData.customAcademyLanguages?.length || 0)}</span>
+                            <span class="summary-text">idioma${((formData.academyLanguages?.length || 0) + (formData.customAcademyLanguages?.length || 0)) !== 1 ? 's' : ''} seleccionado${((formData.academyLanguages?.length || 0) + (formData.customAcademyLanguages?.length || 0)) !== 1 ? 's' : ''}</span>
+                        </div>
+
                         <div class="field-error" id="languages-error" style="display:none;">
                             <i data-lucide="alert-circle"></i>
                             <span>Selecciona al menos un idioma</span>
@@ -109,8 +133,8 @@ export function render(formData) {
                     </button>
                 </div>
             </div>
-        </div>
-    `;
+        </div >
+        `;
 }
 
 export function attach(formData, setFormData, rerender, nextStep) {
@@ -119,12 +143,32 @@ export function attach(formData, setFormData, rerender, nextStep) {
     const locationInput = document.getElementById('onb-location-input');
     const clearLocationBtn = document.getElementById('clear-location');
     const nextBtn = document.getElementById('onb-next-btn');
+    const customLangInput = document.getElementById('onb-customLanguage');
+    const addLangBtn = document.getElementById('add-language-btn');
 
     const showError = (id, show) => {
         const el = document.getElementById(id);
         if (el) {
             el.style.display = show ? 'flex' : 'none';
             if (show && window.lucide) window.lucide.createIcons();
+        }
+    };
+
+    // Initialize customAcademyLanguages if needed
+    if (!formData.customAcademyLanguages) formData.customAcademyLanguages = [];
+
+    const updateSummary = () => {
+        const total = (formData.academyLanguages?.length || 0) + formData.customAcademyLanguages.length;
+        const summary = document.getElementById('selected-summary');
+        if (summary) {
+            if (total > 0) {
+                summary.style.display = '';
+                summary.querySelector('.summary-count').textContent = total;
+                summary.querySelector('.summary-text').textContent =
+                    `idioma${total !== 1 ? 's' : ''} seleccionado${total !== 1 ? 's' : ''} `;
+            } else {
+                summary.style.display = 'none';
+            }
         }
     };
 
@@ -201,18 +245,74 @@ export function attach(formData, setFormData, rerender, nextStep) {
             }
             setFormData(formData);
             showError('languages-error', false);
-
-            // Update summary
-            const summary = document.getElementById('selected-summary');
-            const count = document.querySelector('.summary-count');
-            const text = document.querySelector('.summary-text');
-            if (summary && count && text) {
-                count.textContent = formData.academyLanguages.length;
-                text.textContent = `idioma${formData.academyLanguages.length !== 1 ? 's' : ''} seleccionado${formData.academyLanguages.length !== 1 ? 's' : ''}`;
-                summary.style.display = formData.academyLanguages.length > 0 ? '' : 'none';
-            }
+            updateSummary();
         };
     });
+
+    // Custom language chips (remove)
+    document.querySelectorAll('.custom-lang').forEach(chip => {
+        chip.onclick = (e) => {
+            const lang = chip.dataset.custom;
+            formData.customAcademyLanguages = formData.customAcademyLanguages.filter(l => l !== lang);
+            setFormData(formData);
+            chip.remove();
+            updateSummary();
+        };
+    });
+
+    // Add custom language
+    const addCustomLanguage = () => {
+        const value = customLangInput?.value?.trim();
+        if (!value) return;
+
+        // Check if already exists
+        if (formData.academyLanguages.includes(value) || formData.customAcademyLanguages.includes(value)) {
+            customLangInput.value = '';
+            return;
+        }
+
+        // Add to custom languages
+        formData.customAcademyLanguages.push(value);
+        setFormData(formData);
+
+        // Create new chip visually
+        const grid = document.getElementById('languages-grid');
+        if (grid) {
+            const newChip = document.createElement('button');
+            newChip.type = 'button';
+            newChip.className = 'pill-btn active custom-lang';
+            newChip.dataset.custom = value;
+            newChip.innerHTML = `${value} <i data-lucide="x" class="remove-custom"></i>`;
+            grid.appendChild(newChip);
+
+            // Add click handler for removal
+            newChip.onclick = () => {
+                formData.customAcademyLanguages = formData.customAcademyLanguages.filter(l => l !== value);
+                setFormData(formData);
+                newChip.remove();
+                updateSummary();
+            };
+
+            if (window.lucide) window.lucide.createIcons();
+        }
+
+        customLangInput.value = '';
+        updateSummary();
+        showError('languages-error', false);
+    };
+
+    if (addLangBtn) {
+        addLangBtn.onclick = addCustomLanguage;
+    }
+
+    if (customLangInput) {
+        customLangInput.onkeydown = (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addCustomLanguage();
+            }
+        };
+    }
 
     // Next button with validation
     if (nextBtn) {
@@ -226,7 +326,8 @@ export function attach(formData, setFormData, rerender, nextStep) {
                 isValid = false;
             }
 
-            if (!formData.academyLanguages || formData.academyLanguages.length === 0) {
+            const totalLanguages = (formData.academyLanguages?.length || 0) + formData.customAcademyLanguages.length;
+            if (totalLanguages === 0) {
                 showError('languages-error', true);
                 isValid = false;
             }

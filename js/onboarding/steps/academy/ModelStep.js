@@ -106,38 +106,48 @@ export function attach(formData, setFormData, rerender, nextStep) {
         ['type-error', 'club-toggle-error', 'club-name-error'].forEach(id => showError(id, false));
     };
 
-    // Type chips
+    // Academy Type Chips
     document.querySelectorAll('.type-chip').forEach(chip => {
         chip.onclick = () => {
             formData.academyType = chip.dataset.value;
             setFormData(formData);
+
+            // UI Update
             document.querySelectorAll('.type-chip').forEach(c => c.classList.remove('active'));
             chip.classList.add('active');
+
             showError('type-error', false);
         };
     });
 
-    // Club toggle
+    // Main Club Toggle
     document.getElementById('club-yes')?.addEventListener('click', () => {
         formData.hasMainClub = true;
         setFormData(formData);
+
+        // UI Update
         document.getElementById('club-yes').classList.add('active-yes');
         document.getElementById('club-no').classList.remove('active-no');
         clubDetails?.classList.add('expanded');
+
         showError('club-toggle-error', false);
     });
 
     document.getElementById('club-no')?.addEventListener('click', () => {
         formData.hasMainClub = false;
-        formData.mainClubName = '';
+        formData.mainClubName = ''; // clear name if No
         setFormData(formData);
+
+        // UI Update
         document.getElementById('club-no').classList.add('active-no');
         document.getElementById('club-yes').classList.remove('active-yes');
         clubDetails?.classList.remove('expanded');
+
         showError('club-toggle-error', false);
         showError('club-name-error', false);
     });
 
+    // Main Club Name Input
     mainClubInput?.addEventListener('input', (e) => {
         formData.mainClubName = e.target.value;
         setFormData(formData);

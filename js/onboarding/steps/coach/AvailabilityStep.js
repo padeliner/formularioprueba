@@ -1,6 +1,13 @@
 // AvailabilityStep.js - Coach Step 3: Schedule & Pricing
 import { DAYS, SLOTS, STUDENTS_RANGES, CLASSES_RANGES, PRICES } from '../../constants.js';
 
+const BOOKING_METHODS = [
+    { id: 'whatsapp', label: 'WhatsApp', icon: 'message-circle' },
+    { id: 'excel', label: 'Excel / Manual', icon: 'table' },
+    { id: 'app', label: 'App', icon: 'smartphone' },
+    { id: 'mixto', label: 'Mixto', icon: 'layers' }
+];
+
 export function render(formData) {
     // Generate compact availability grid
     const daysHeaders = DAYS.map(day => `
@@ -22,6 +29,13 @@ export function render(formData) {
     });
 
 
+
+    const methodChips = BOOKING_METHODS.map(method => `
+        <button type="button" class="exp-chip method-chip ${formData.bookingMethod === method.id ? 'active' : ''}" data-value="${method.id}" style="display: inline-flex; align-items: center; gap: 8px;">
+            <i data-lucide="${method.icon}"></i>
+            ${method.label}
+        </button>
+    `).join('');
 
     return `
         <div class="onboarding-step step-content">
@@ -52,6 +66,23 @@ export function render(formData) {
                         <div class="field-error" id="availability-error" style="display:none;">
                             <i data-lucide="alert-circle"></i>
                             <span>Selecciona al menos un horario disponible</span>
+                        </div>
+                    </div>
+
+                    <!-- Booking Method Section -->
+                    <div class="form-section">
+                        <div class="section-icon-row">
+                            <div class="section-icon">
+                                <i data-lucide="calendar-check"></i>
+                            </div>
+                            <div class="section-label">Gestión de reservas</div>
+                        </div>
+                        <div class="chips-grid">
+                            ${methodChips}
+                        </div>
+                        <div class="field-error" id="method-error" style="display:none;">
+                            <i data-lucide="alert-circle"></i>
+                            <span>Selecciona una opción</span>
                         </div>
                     </div>
 
@@ -186,6 +217,17 @@ export function attach(formData, setFormData, rerender, nextStep) {
         };
     });
 
+    // Method chips (single select)
+    document.querySelectorAll('.method-chip').forEach(chip => {
+        chip.onclick = () => {
+            formData.bookingMethod = chip.dataset.value;
+            setFormData(formData);
+            document.querySelectorAll('.method-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            showError('method-error', false);
+        };
+    });
+
     // Stats selects
     document.getElementById('onb-studentsCount')?.addEventListener('change', (e) => {
         formData.studentsCount = e.target.value;
@@ -218,6 +260,7 @@ export function attach(formData, setFormData, rerender, nextStep) {
 
     const clearAllErrors = () => {
         showError('availability-error', false);
+        showError('method-error', false);
         showError('students-error', false);
         showError('classes-error', false);
         showError('price-error', false);
@@ -252,6 +295,12 @@ export function attach(formData, setFormData, rerender, nextStep) {
             // Validate availability
             if (!formData.availability || formData.availability.length === 0) {
                 showError('availability-error', true);
+                isValid = false;
+            }
+
+            // Validate booking method
+            if (!formData.bookingMethod) {
+                showError('method-error', true);
                 isValid = false;
             }
 
@@ -291,6 +340,7 @@ export function validate(formData) {
     if (!formData.availability || formData.availability.length === 0) {
         errors.availability = "Selecciona al menos un horario";
     }
+    if (!formData.bookingMethod) errors.bookingMethod = "Requerido";
     if (!formData.studentsCount) errors.studentsCount = "Requerido";
     if (!formData.classesPerWeek) errors.classesPerWeek = "Requerido";
     if (!formData.pricePerHour) errors.pricePerHour = "Requerido";

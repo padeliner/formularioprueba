@@ -1,10 +1,23 @@
 // BookingsStep.js - Club Step 6: Court Bookings
 const BOOKING_PRICE_RANGES = ['< 15 €', '15 € – 20 €', '20 € – 30 €', '30 € – 40 €', '40 € +'];
 const BOOKINGS_RANGES = ['< 50', '50 – 100', '100 – 200', '200 – 500', '500 +'];
+const BOOKING_METHODS = [
+    { id: 'whatsapp', label: 'WhatsApp', icon: 'message-circle' },
+    { id: 'excel', label: 'Excel / Manual', icon: 'table' },
+    { id: 'app', label: 'App', icon: 'smartphone' },
+    { id: 'mixto', label: 'Mixto', icon: 'layers' }
+];
 
 const ACTIVITY_TYPES = ['Todo el año', 'Temporadas'];
 
 export function render(formData) {
+    const methodChips = BOOKING_METHODS.map(method => `
+        <button type="button" class="exp-chip method-chip ${formData.bookingMethod === method.id ? 'active' : ''}" data-value="${method.id}" style="display: inline-flex; align-items: center; gap: 8px;">
+            <i data-lucide="${method.icon}"></i>
+            ${method.label}
+        </button>
+    `).join('');
+
     return `
         <div class="onboarding-step step-content">
             <div class="step-inner">
@@ -14,6 +27,22 @@ export function render(formData) {
                 </div>
 
                 <div class="step-body">
+                    <div class="form-section">
+                        <div class="section-icon-row">
+                            <div class="section-icon">
+                                <i data-lucide="calendar-check"></i>
+                            </div>
+                            <div class="section-label">Gestión de reservas</div>
+                        </div>
+                        <div class="chips-grid">
+                            ${methodChips}
+                        </div>
+                        <div class="field-error" id="method-error" style="display:none;">
+                            <i data-lucide="alert-circle"></i>
+                            <span>Selecciona una opción</span>
+                        </div>
+                    </div>
+
                     <div class="form-section">
                         <div class="section-icon-row">
                             <div class="section-icon">
@@ -103,10 +132,22 @@ export function attach(formData, setFormData, rerender, nextStep) {
     };
 
     const clearAllErrors = () => {
+        showError('method-error', false);
         showError('booking-price-error', false);
         showError('bookings-error', false);
         showError('activity-error', false);
     };
+
+    // Method chips (single select)
+    document.querySelectorAll('.method-chip').forEach(chip => {
+        chip.onclick = () => {
+            formData.bookingMethod = chip.dataset.value;
+            setFormData(formData);
+            document.querySelectorAll('.method-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            showError('method-error', false);
+        };
+    });
 
     // Booking price select
     const bookingPriceSelect = document.getElementById('booking-price-select');
@@ -143,6 +184,11 @@ export function attach(formData, setFormData, rerender, nextStep) {
             clearAllErrors();
             let isValid = true;
 
+            if (!formData.bookingMethod) {
+                showError('method-error', true);
+                isValid = false;
+            }
+
             if (!formData.bookingPriceRange) {
                 showError('booking-price-error', true);
                 isValid = false;
@@ -172,6 +218,7 @@ export function attach(formData, setFormData, rerender, nextStep) {
 
 export function validate(formData) {
     const errors = {};
+    if (!formData.bookingMethod) errors.bookingMethod = "Selecciona una opción";
     if (!formData.bookingPriceRange) errors.bookingPriceRange = "Selecciona un rango de precios";
     if (!formData.estimatedBookings) errors.estimatedBookings = "Selecciona un rango";
     if (!formData.annualActivity) errors.annualActivity = "Selecciona una opción";

@@ -1,4 +1,4 @@
-// ServicesStep.js - Academy Step 4: Services & Monetization
+// ServicesStep.js - Academy Step 4: Services & Monetization (Updated)
 const SERVICES = ['Clases Individuales', 'Clases Grupales', 'Packs Mensuales', 'Campus / Stages'];
 const PRICE_RANGES = ['< 50 €', '50 € – 100 €', '100 € – 200 €', '200 € – 300 €', '300 € +'];
 
@@ -9,10 +9,8 @@ export function render(formData) {
         </button>
     `).join('');
 
-    const priceChips = PRICE_RANGES.map(price => `
-        <button type="button" class="exp-chip price-chip ${formData.monthlyPriceRange === price ? 'active' : ''}" data-value="${price}">
-            ${price}
-        </button>
+    const priceOptions = PRICE_RANGES.map(price => `
+        <option value="${price}" ${formData.monthlyPriceRange === price ? 'selected' : ''}>${price}</option>
     `).join('');
 
     return `
@@ -48,8 +46,12 @@ export function render(formData) {
                             </div>
                             <div class="section-label">Precio Medio Mensual por Alumno</div>
                         </div>
-                        <div class="chips-grid">
-                            ${priceChips}
+                        <div class="input-field">
+                            <select id="onb-price-range" class="field-input field-select">
+                                <option value="">Selecciona una opción</option>
+                                ${priceOptions}
+                            </select>
+                            <i data-lucide="euro" class="field-icon"></i>
                         </div>
                         <div class="field-error" id="price-error" style="display:none;">
                             <i data-lucide="alert-circle"></i>
@@ -75,6 +77,7 @@ export function attach(formData, setFormData, rerender, nextStep) {
     if (!formData.services) formData.services = [];
 
     const nextBtn = document.getElementById('onb-next-btn');
+    const priceSelect = document.getElementById('onb-price-range');
 
     const showError = (id, show) => {
         const el = document.getElementById(id);
@@ -105,16 +108,14 @@ export function attach(formData, setFormData, rerender, nextStep) {
         };
     });
 
-    // Price chips (single select)
-    document.querySelectorAll('.price-chip').forEach(chip => {
-        chip.onclick = () => {
-            formData.monthlyPriceRange = chip.dataset.value;
+    // Price Select
+    if (priceSelect) {
+        priceSelect.addEventListener('change', (e) => {
+            formData.monthlyPriceRange = e.target.value;
             setFormData(formData);
-            document.querySelectorAll('.price-chip').forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
-            showError('price-error', false);
-        };
-    });
+            if (e.target.value) showError('price-error', false);
+        });
+    }
 
     if (nextBtn) {
         nextBtn.onclick = () => {
