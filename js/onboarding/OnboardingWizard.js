@@ -17,7 +17,6 @@ import * as CoachVerificationStep from './steps/coach/VerificationStep.js';
 // Club steps
 import * as ClubIdentityStep from './steps/club/IdentityStep.js';
 import * as ClubLocationStep from './steps/club/LocationStep.js';
-import * as ClubContactStep from './steps/club/ContactStep.js';
 import * as ClubFacilitiesStep from './steps/club/FacilitiesStep.js';
 import * as ClubClassesStep from './steps/club/ClassesStep.js';
 import * as ClubBookingsStep from './steps/club/BookingsStep.js';
@@ -137,8 +136,8 @@ export class OnboardingWizard {
     getMaxStep() {
         // For coach: 6 steps after role selection (0..6)
         if (this.formData.role === 'Entrenador') return 6;
-        // For club: 9 steps after role selection (0..9)
-        if (this.formData.role === 'Club') return 9;
+        // For club: 8 steps after role selection (0..8)
+        if (this.formData.role === 'Club') return 8;
         // For academy: 9 steps after role selection (0..9)
         if (this.formData.role === 'Academia') return 9;
         // For commercial: 1 step after role selection (0..1)
@@ -168,15 +167,14 @@ export class OnboardingWizard {
         // Club steps
         if (this.formData.role === 'Club') {
             switch (this.step) {
-                case 1: return ClubIdentityStep;
+                case 1: return ClubIdentityStep; // Identity merged with Contact
                 case 2: return ClubLocationStep;
-                case 3: return ClubContactStep;
-                case 4: return ClubFacilitiesStep;
+                case 3: return ClubFacilitiesStep;
+                case 4: return ClubBookingsStep;
                 case 5: return ClubClassesStep;
-                case 6: return ClubBookingsStep;
-                case 7: return ClubCommunityStep;
-                case 8: return ClubMarketingStep;
-                case 9: return ClubVerificationStep;
+                case 6: return ClubCommunityStep;
+                case 7: return ClubMarketingStep;
+                case 8: return ClubVerificationStep;
             }
         }
 
@@ -232,13 +230,12 @@ export class OnboardingWizard {
                 0: { name: 'Perfil', icon: 'user-circle' },
                 1: { name: 'Identidad', icon: 'building-2' },
                 2: { name: 'Ubicación', icon: 'map-pin' },
-                3: { name: 'Contacto', icon: 'phone' },
-                4: { name: 'Instalaciones', icon: 'grid-3x3' },
+                3: { name: 'Instalaciones', icon: 'grid-3x3' },
+                4: { name: 'Reservas', icon: 'calendar-check' },
                 5: { name: 'Clases', icon: 'graduation-cap' },
-                6: { name: 'Reservas', icon: 'calendar-check' },
-                7: { name: 'Comunidad', icon: 'users' },
-                8: { name: 'Visibilidad', icon: 'eye' },
-                9: { name: 'Verificación', icon: 'badge-check' }
+                6: { name: 'Comunidad', icon: 'users' },
+                7: { name: 'Visibilidad', icon: 'eye' },
+                8: { name: 'Verificación', icon: 'badge-check' }
             };
             return clubSteps[this.step] || { name: '', icon: '' };
         }

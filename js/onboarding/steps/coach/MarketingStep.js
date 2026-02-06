@@ -16,7 +16,7 @@ export function render(formData) {
     `).join('');
 
     const discoveryChips = DISCOVERY_SOURCES.map(source => `
-        <button type="button" class="discovery-chip ${formData.discoverySource === source ? 'active' : ''}" data-value="${source}">
+        <button type="button" class="pill-btn ${formData.discoverySource === source ? 'active' : ''}" data-discovery="${source}">
             <span>${source}</span>
         </button>
     `).join('');
@@ -133,14 +133,14 @@ export function attach(formData, setFormData, rerender, nextStep) {
     };
 
     // Discovery Source chips
-    document.querySelectorAll('.discovery-chip').forEach(chip => {
+    document.querySelectorAll('[data-discovery]').forEach(chip => {
         chip.onclick = () => {
-            const val = chip.dataset.value;
+            const val = chip.dataset.discovery;
             formData.discoverySource = val;
             setFormData(formData);
 
             // Visual update
-            document.querySelectorAll('.discovery-chip').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('[data-discovery]').forEach(c => c.classList.remove('active'));
             chip.classList.add('active');
             showError('discovery-error', false);
         };

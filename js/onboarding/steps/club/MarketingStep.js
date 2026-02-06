@@ -1,6 +1,13 @@
 // MarketingStep.js - Club Step 8: Marketing (Visibilidad)
+import { DISCOVERY_SOURCES } from '../../constants.js';
 
 export function render(formData) {
+    const discoveryChips = DISCOVERY_SOURCES.map(source => `
+        <button type="button" class="discovery-chip ${formData.discoverySource === source ? 'active' : ''}" data-value="${source}">
+            <span>${source}</span>
+        </button>
+    `).join('');
+
     return `
         <div class="onboarding-step step-content">
             <div class="step-inner">
@@ -10,6 +17,23 @@ export function render(formData) {
                 </div>
 
                 <div class="step-body">
+                    <!-- Discovery Source Section -->
+                    <div class="form-section">
+                        <div class="section-icon-row">
+                            <div class="section-icon">
+                                <i data-lucide="search"></i>
+                            </div>
+                            <div class="section-label">¿Cómo nos has conocido?</div>
+                        </div>
+                        <div class="discovery-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 12px;">
+                            ${discoveryChips}
+                        </div>
+                        <div class="field-error" id="discovery-error" style="display:none;">
+                            <i data-lucide="alert-circle"></i>
+                            <span>Selecciona una opción</span>
+                        </div>
+                    </div>
+
                     <!-- Sponsors Section -->
                     <div class="form-section">
                         <div class="section-icon-row">
@@ -94,7 +118,22 @@ export function attach(formData, setFormData, rerender, nextStep) {
     const clearAllErrors = () => {
         showError('sponsors-toggle-error', false);
         showError('sponsor-brand-error', false);
+        showError('discovery-error', false);
     };
+
+    // Discovery Source chips
+    document.querySelectorAll('.discovery-chip').forEach(chip => {
+        chip.onclick = () => {
+            const val = chip.dataset.value;
+            formData.discoverySource = val;
+            setFormData(formData);
+
+            // Visual update
+            document.querySelectorAll('.discovery-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            showError('discovery-error', false);
+        };
+    });
 
     // Sponsors toggle
     document.getElementById('sponsors-yes')?.addEventListener('click', () => {
@@ -136,6 +175,12 @@ export function attach(formData, setFormData, rerender, nextStep) {
             clearAllErrors();
             let isValid = true;
 
+            // Validate Discovery Source
+            if (!formData.discoverySource) {
+                showError('discovery-error', true);
+                isValid = false;
+            }
+
             // Validate sponsors
             if (formData.hasSponsors === undefined || formData.hasSponsors === null) {
                 showError('sponsors-toggle-error', true);
@@ -161,6 +206,7 @@ export function attach(formData, setFormData, rerender, nextStep) {
 
 export function validate(formData) {
     const errors = {};
+    if (!formData.discoverySource) errors.discoverySource = "Obligatorio";
     if (formData.hasSponsors === true) {
         if (!formData.sponsorBrand) errors.sponsorBrand = "Obligatorio";
     }
