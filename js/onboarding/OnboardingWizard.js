@@ -156,10 +156,10 @@ export class OnboardingWizard {
         // Coach steps
         if (this.formData.role === 'Entrenador') {
             switch (this.step) {
-                case 1: return CoachLocationStep;
-                case 2: return CoachClubStep;
-                case 3: return CoachAvailabilityStep;
-                case 4: return CoachProfileStep;
+                case 1: return CoachProfileStep;
+                case 2: return CoachLocationStep;
+                case 3: return CoachClubStep;
+                case 4: return CoachAvailabilityStep;
                 case 5: return CoachMarketingStep;
                 case 6: return CoachVerificationStep;
             }
@@ -216,10 +216,10 @@ export class OnboardingWizard {
         if (this.formData.role === 'Entrenador') {
             const coachSteps = {
                 0: { name: 'Perfil', icon: 'user-circle' },
-                1: { name: 'Ubicación', icon: 'map-pin' },
-                2: { name: 'Club', icon: 'building-2' },
-                3: { name: 'Agenda', icon: 'calendar' },
-                4: { name: 'Experiencia', icon: 'award' },
+                1: { name: 'Experiencia', icon: 'award' },
+                2: { name: 'Ubicación', icon: 'map-pin' },
+                3: { name: 'Club', icon: 'building-2' },
+                4: { name: 'Agenda', icon: 'calendar' },
                 5: { name: 'Visibilidad', icon: 'eye' },
                 6: { name: 'Verificación', icon: 'badge-check' }
             };

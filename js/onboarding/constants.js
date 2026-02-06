@@ -111,6 +111,16 @@ export const COUNTRIES = [
     "Suecia", "Países Bajos", "Bélgica", "Suiza", "Austria"
 ];
 
+export const DISCOVERY_SOURCES = [
+    "Instagram",
+    "TikTok",
+    "YouTube",
+    "Google / Búsqueda en internet",
+    "Recomendación",
+    "Club / Evento",
+    "Otro"
+];
+
 // Employment status for commercial role
 export const COMMERCIAL_EMPLOYMENT = ["Trabajando", "Estudiante", "Sin nada"];
 
@@ -151,6 +161,7 @@ export const DEFAULT_FORM_DATA = {
     hasSponsors: null,
     sponsorTypes: [],
     sponsorBrand: "",
+    discoverySource: "",
     instagram: "",
 
     // Verification Step
